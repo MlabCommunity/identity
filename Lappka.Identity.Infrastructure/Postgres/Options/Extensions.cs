@@ -1,6 +1,6 @@
 using Microsoft.Extensions.Configuration;
 
-namespace Lappka.Identity.Shared.Options;
+namespace Lappka.Identity.Infrastructure.Postgres.Options;
 
 public static class Extensions
 {

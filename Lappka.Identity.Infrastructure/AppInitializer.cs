@@ -2,9 +2,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Lappka.Identity.Shared.Services;
+namespace Lappka.Identity.Infrastructure;
 
-internal sealed class AppInitializer : IHostedService
+public sealed class AppInitializer : IHostedService
 {
     private readonly IServiceProvider _serviceProvider;
 

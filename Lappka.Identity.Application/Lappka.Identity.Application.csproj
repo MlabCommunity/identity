@@ -6,4 +6,8 @@
         <ImplicitUsings>enable</ImplicitUsings>
     </PropertyGroup>
 
+    <ItemGroup>
+      <ProjectReference Include="..\Lappka.Identity.Core\Lappka.Identity.Core.csproj" />
+    </ItemGroup>
+
 </Project>

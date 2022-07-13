@@ -1,4 +1,4 @@
-namespace Lappka.Identity.Infrastructure.EF.Options;
+namespace Lappka.Identity.Infrastructure.Postgres.Options;
 
 public class PostgresOptions
 {

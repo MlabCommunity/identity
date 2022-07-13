@@ -8,8 +8,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lappka.Identity.Infrastruct
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lappka.Identity.Core", "Lappka.Identity.Core\Lappka.Identity.Core.csproj", "{FF2BCDC4-8917-45D2-A939-3F66D9660ACC}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Lappka.Identity.Shared", "Lappka.Identity.Shared\Lappka.Identity.Shared.csproj", "{F2F185DC-939B-46C6-A94B-F6956CF6A267}"
-EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -32,9 +30,5 @@ Global
 		{FF2BCDC4-8917-45D2-A939-3F66D9660ACC}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FF2BCDC4-8917-45D2-A939-3F66D9660ACC}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FF2BCDC4-8917-45D2-A939-3F66D9660ACC}.Release|Any CPU.Build.0 = Release|Any CPU
-		{F2F185DC-939B-46C6-A94B-F6956CF6A267}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{F2F185DC-939B-46C6-A94B-F6956CF6A267}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{F2F185DC-939B-46C6-A94B-F6956CF6A267}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{F2F185DC-939B-46C6-A94B-F6956CF6A267}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -1,4 +1,4 @@
-namespace Lappka.Identity.Shared.Exceptions;
+namespace Lappka.Identity.Infrastructure.Exceptions;
 
 public class ProjectException : Exception
 {
@@ -7,5 +7,5 @@ public class ProjectException : Exception
         _errorCode = errorCode;
     }
 
-    private int _errorCode { get; }
+    public int _errorCode { get; }
 }

@@ -1,4 +1,6 @@
-using Lappka.Identity.Infrastructure.EF;
+using Lappka.Identity.Infrastructure.Exceptions;
+using Lappka.Identity.Infrastructure.Postgres;
+using Microsoft.AspNetCore.Builder;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -10,5 +12,12 @@ public static class Extensions
     {
         services.AddPostgres(configuration);
         return services;
+    }
+
+
+    public static IApplicationBuilder UseMiddleware(this IApplicationBuilder app)
+    {
+        app.UseMiddleware<ExceptionMiddleware>();
+        return app;
     }
 }
