@@ -1,3 +1,4 @@
+using Lapka.Identity.Core.Domain.Entities;
 using Lapka.Identity.Infrastructure.DataBase;
 using Lapka.Identity.Infrastructure.Settings;
 using Microsoft.AspNetCore.Identity;
@@ -11,8 +12,14 @@ builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
-builder.Services.AddIdentity<IdentityUser, IdentityRole>()
-    .AddEntityFrameworkStores<DataContext>();
+
+builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(c =>
+    {
+        c.SignIn.RequireConfirmedPhoneNumber = false;
+        c.SignIn.RequireConfirmedEmail = false;
+        c.User.RequireUniqueEmail = true;
+    })
+.AddEntityFrameworkStores<DataContext>();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 

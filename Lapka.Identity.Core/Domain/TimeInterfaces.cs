@@ -1,4 +1,4 @@
-﻿namespace Lapka.Files.Core.Domain;
+﻿namespace Lapka.Identity.Core.Domain;
 
 public interface ICreatedAt
 {

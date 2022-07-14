@@ -1,12 +1,16 @@
-﻿using System.Reflection;
-using Lapka.Files.Core.Domain;
+﻿using Lapka.Identity.Core.Domain;
+using Lapka.Identity.Core.Domain.Entities;
+using Lapka.Identity.Core.EntityConfiguration;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
 namespace Lapka.Identity.Infrastructure.DataBase;
 
-public class DataContext : IdentityDbContext
+public class DataContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
 {
+    public DbSet<UserExtended> UsersExtended;
+
     public DataContext(DbContextOptions<DataContext> options)
         : base(options)
     {
@@ -14,7 +18,8 @@ public class DataContext : IdentityDbContext
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        //builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        builder.ApplyConfigurationsFromAssembly(typeof(UserExtendedConfiguration).Assembly);
         base.OnModelCreating(builder);
     }
 

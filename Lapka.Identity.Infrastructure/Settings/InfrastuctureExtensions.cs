@@ -1,4 +1,6 @@
-﻿using Lapka.Identity.Infrastructure.Exceptions;
+﻿using Lapka.Identity.Core.IRepository;
+using Lapka.Identity.Infrastructure.Exceptions;
+using Lapka.Identity.Infrastructure.Repository;
 using Lapka.Identity.Infrastructure.Services;
 using Lapka.Identity.Infrastructure.Services.Interfaces;
 using Microsoft.AspNetCore.Builder;
@@ -20,7 +22,8 @@ public static class InfrastuctureExtensions
         IConfiguration configuration)
     {
         services.AddScoped<ExceptionMiddleware>();
-        services.AddScoped<IUserService, UserService>();
+        services.AddScoped<IAuthService, AuthService>();
+        services.AddScoped<IUserExtendedRepository, UserExtendedRepository>();
 
         return services;
     }
