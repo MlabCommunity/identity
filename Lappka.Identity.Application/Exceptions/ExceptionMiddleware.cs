@@ -1,7 +1,8 @@
 using System.Text.Json;
+using Lappka.Identity.Application.Exceptions;
 using Microsoft.AspNetCore.Http;
 
-namespace Lappka.Identity.Infrastructure.Exceptions;
+namespace Lappka.Identity.Application.Exceptions;
 
 internal sealed class ExceptionMiddleware : IMiddleware
 {

@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
@@ -11,9 +12,4 @@ public class AppDbContext : IdentityDbContext
     }
     
     
-    protected override void OnModelCreating(ModelBuilder builder)
-    {
-        base.OnModelCreating(builder);
-        
-    }
 }

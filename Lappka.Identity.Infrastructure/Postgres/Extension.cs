@@ -11,12 +11,14 @@ public static class Extension
 {
     public static IServiceCollection AddPostgres(this IServiceCollection services, IConfiguration configuration)
     {
-        
         var options = configuration.GetOptions<PostgresOptions>("Postgres");
         services.AddDbContext<AppDbContext>(ctx =>
             ctx.UseNpgsql(options.ConnectionString));
-        
-        services.AddIdentity<IdentityUser,IdentityRole>().AddEntityFrameworkStores<AppDbContext>();
+
+        AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
+
+        services.AddIdentity<IdentityUser<Guid>, IdentityRole>().AddEntityFrameworkStores<AppDbContext>()
+            .AddDefaultTokenProviders();
         
         return services;
     }
