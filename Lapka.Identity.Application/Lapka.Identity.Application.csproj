@@ -11,6 +11,13 @@
 
   <ItemGroup>
     <Folder Include="Exceptions\" />
+    <Folder Include="Queries\Handlers\" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Convey" Version="1.0.541" />
+    <PackageReference Include="Convey.CQRS.Commands" Version="1.0.541" />
+    <PackageReference Include="Convey.CQRS.Queries" Version="1.0.541" />
   </ItemGroup>
 
 </Project>

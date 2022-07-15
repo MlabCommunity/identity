@@ -1,4 +1,4 @@
-﻿namespace Lapka.Identity.Application.Commands
+﻿namespace Lapka.Identity.Application.Queries
 {
     public class UserLogCommand
     {

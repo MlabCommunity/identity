@@ -9,7 +9,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Lapka.Identity.Infrastructure.Migrations
+namespace Lapka.Identity.Infrastructure.DataBase.Migrations
 {
     [DbContext(typeof(DataContext))]
     [Migration("20220714122948_Initial")]

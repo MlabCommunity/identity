@@ -1,44 +1,30 @@
-﻿using Lapka.Identity.Application.Commands;
-using Lapka.Identity.Core.Domain.Entities;
-using Lapka.Identity.Core.IRepository;
+﻿using Convey.CQRS.Commands;
+using Convey.CQRS.Queries;
+using Lapka.Identity.Application.Commands;
+using Lapka.Identity.Application.Queries;
 using Lapka.Identity.Infrastructure.Services.Interfaces;
-using Microsoft.AspNetCore.Identity;
 
 namespace Lapka.Identity.Infrastructure.Services;
 
 internal class AuthService : IAuthService
 {
-    private readonly UserManager<AppUser> _userManager;
-    private readonly SignInManager<AppUser> _signInManager;
-    private readonly IUserExtendedRepository _userExtendedRepository;
+    private readonly ICommandDispatcher _commandDispatcher;
+    private readonly IQueryDispatcher _queryDispatcher;
 
-    public AuthService(UserManager<AppUser> userManager, SignInManager<AppUser> signInManager, IUserExtendedRepository userExtendedRepository)
+    public AuthService(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
     {
-        _userManager = userManager;
-        _signInManager = signInManager;
-        _userExtendedRepository = userExtendedRepository;
+        _commandDispatcher = commandDispatcher;
+        _queryDispatcher = queryDispatcher;
     }
 
-    public async Task<Guid> Register(UserRegCommand userRegCommand)
+    public async Task RegisterUser(UserRegCommand command)
     {
-        var user = new AppUser {
-            UserName = userRegCommand.UserName,
-            Email = userRegCommand.EmailAddress
-        };
-        var result = await _userManager.CreateAsync(user, userRegCommand.Password);
-
-        if (!result.Succeeded)
-        {
-            throw new Exception(result.Errors.ToString());
-        }
-
-        await _userExtendedRepository.CreateUserExtended(user.Id);
-        
-        return user.Id;
+        await _commandDispatcher.SendAsync(command);
     }
 
-    public async Task Login(UserLogCommand userLogDto)
+    public async Task LoginUser(UserLogCommand command)
     {
+        //await _commandDispatcher.SendAsync(command);
         throw new NotImplementedException();
     }
 }

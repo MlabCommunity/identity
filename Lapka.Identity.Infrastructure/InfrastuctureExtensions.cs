@@ -1,4 +1,5 @@
 ﻿using Lapka.Identity.Core.IRepository;
+using Lapka.Identity.Infrastructure.DataBase;
 using Lapka.Identity.Infrastructure.Exceptions;
 using Lapka.Identity.Infrastructure.Repository;
 using Lapka.Identity.Infrastructure.Services;
@@ -21,6 +22,7 @@ public static class InfrastuctureExtensions
     public static IServiceCollection AddInfrastructure(this IServiceCollection services,
         IConfiguration configuration)
     {
+        services.AddHostedService<DbMigrator>();
         services.AddScoped<ExceptionMiddleware>();
         services.AddScoped<IAuthService, AuthService>();
         services.AddScoped<IUserExtendedRepository, UserExtendedRepository>();

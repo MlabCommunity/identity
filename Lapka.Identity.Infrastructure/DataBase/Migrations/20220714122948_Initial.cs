@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Lapka.Identity.Infrastructure.Migrations
+namespace Lapka.Identity.Infrastructure.DataBase.Migrations
 {
     public partial class Initial : Migration
     {

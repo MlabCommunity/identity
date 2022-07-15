@@ -1,3 +1,4 @@
+using Lapka.Identity.Application;
 using Lapka.Identity.Core.Domain.Entities;
 using Lapka.Identity.Infrastructure.DataBase;
 using Lapka.Identity.Infrastructure.Settings;
@@ -21,12 +22,12 @@ builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(c =>
     })
 .AddEntityFrameworkStores<DataContext>();
 
-builder.Services.AddInfrastructure(builder.Configuration);
-
 var connectionString = builder.Configuration.GetConnectionString("postgres");
 builder.Services.AddDbContext<DataContext>(x => x.UseNpgsql(connectionString));
 AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
-builder.Services.AddHostedService<DbMigrator>();
+
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication(builder.Configuration);
 
 var app = builder.Build();
 
