@@ -1,15 +1,18 @@
+using FluentValidation;
 using Lapka.Identity.Application;
 using Lapka.Identity.Core.Domain.Entities;
 using Lapka.Identity.Infrastructure.DataBase;
 using Lapka.Identity.Infrastructure.Settings;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using FluentValidation.AspNetCore;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
+
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
