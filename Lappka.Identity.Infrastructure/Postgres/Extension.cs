@@ -1,3 +1,4 @@
+using Lappka.Identity.Core.Entities;
 using Lappka.Identity.Infrastructure.Context;
 using Lappka.Identity.Infrastructure.Postgres.Options;
 using Microsoft.AspNetCore.Identity;
@@ -17,7 +18,7 @@ public static class Extension
 
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-        services.AddIdentity<IdentityUser<Guid>, IdentityRole>().AddEntityFrameworkStores<AppDbContext>()
+        services.AddIdentity<ApplicationUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
         
         return services;

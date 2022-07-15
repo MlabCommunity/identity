@@ -1,7 +1,7 @@
+using System.Security.Claims;
 using Convey.CQRS.Commands;
 using Convey.CQRS.Queries;
 using Lappka.Identity.Application.Commands;
-using Lappka.Identity.Application.JWT;
 using Lappka.Identity.Application.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -11,13 +11,13 @@ namespace Lappka.Identity.Api.Controllers;
 
 [ApiController]
 [Route("api/[controller]")]
-public class UserController :ControllerBase
+public class AuthController :ControllerBase
 {
 
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;
     
-    public UserController(ICommandDispatcher commandDispatcher,IQueryDispatcher queryDispatcher)
+    public AuthController(ICommandDispatcher commandDispatcher,IQueryDispatcher queryDispatcher)
     {
         _commandDispatcher = commandDispatcher;
         _queryDispatcher = queryDispatcher;
@@ -36,13 +36,19 @@ public class UserController :ControllerBase
         var token = await _queryDispatcher.QueryAsync(query);
         return Ok(token);
     }
-
-    [HttpGet("{id}")]
-    [Authorize]
-    public async Task<IActionResult> GetAsync([FromRoute] string id)
+    
+    [HttpPost("Refresh")]
+    public async Task<IActionResult> RefreshTokensAsync(RefreshTokensQuery query)
     {
-       // var userDto = await _userService.GetAsync();
-
-       return Ok();
+        var token = await _queryDispatcher.QueryAsync(query);
+        return Ok(token);
     }
+
+    [HttpGet]
+    [Authorize]
+    public IActionResult Hello()
+    {
+        return Ok(User.FindFirst(ClaimTypes.NameIdentifier).Value);
+    }
+    
 }

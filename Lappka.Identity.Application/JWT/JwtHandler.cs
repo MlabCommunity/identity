@@ -4,8 +4,8 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Lappka.Identity.Application.JWT;
 
+namespace Lappka.Identity.Application.JWT;
 
 public class JwtHandler : IJwtHandler
 {
@@ -16,10 +16,11 @@ public class JwtHandler : IJwtHandler
     private JwtHeader _jwtHeader;
     public TokenValidationParameters Parameters { get; private set; }
 
+
     public JwtHandler(IOptions<JwtSettings> settings)
     {
         _settings = settings.Value;
-        if(_settings.UseRsa)
+        if (_settings.UseRsa)
         {
             InitializeRsa();
         }
@@ -27,36 +28,35 @@ public class JwtHandler : IJwtHandler
         {
             InitializeHmac();
         }
+
         InitializeJwtParameters();
     }
 
     private void InitializeRsa()
     {
-        using(RSA publicRsa = RSA.Create())
-        {
-            var publicKeyXml = File.ReadAllText(_settings.RsaPublicKeyXML);
-            publicRsa.FromXmlString(publicKeyXml);
-            _issuerSigningKey = new RsaSecurityKey(publicRsa);
-        }
-        if(string.IsNullOrWhiteSpace(_settings.RsaPrivateKeyXML))
+        RSA publicRsa = RSA.Create();
+        var publicKeyXml = File.ReadAllText(_settings.RsaPublicKeyXML);
+        publicRsa.FromXmlString(publicKeyXml);
+        _issuerSigningKey = new RsaSecurityKey(publicRsa);
+
+        if (string.IsNullOrWhiteSpace(_settings.RsaPrivateKeyXML))
         {
             return;
         }
-        using(RSA privateRsa = RSA.Create())
-        {
-            var privateKeyXml = File.ReadAllText(_settings.RsaPrivateKeyXML);
-            privateRsa.FromXmlString(privateKeyXml);
-            var privateKey = new RsaSecurityKey(privateRsa);
-            _signingCredentials = new SigningCredentials(privateKey, SecurityAlgorithms.RsaSha256);
-        }
+
+        RSA privateRsa = RSA.Create();
+        var privateKeyXml = File.ReadAllText(_settings.RsaPrivateKeyXML);
+        privateRsa.FromXmlString(privateKeyXml);
+        var privateKey = new RsaSecurityKey(privateRsa);
+        _signingCredentials = new SigningCredentials(privateKey, SecurityAlgorithms.RsaSha256);
     }
 
     private void InitializeHmac()
     {
         _issuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_settings.HmacSecretKey));
-        _signingCredentials = new SigningCredentials(_issuerSigningKey, SecurityAlgorithms.HmacSha256); 
+        _signingCredentials = new SigningCredentials(_issuerSigningKey, SecurityAlgorithms.HmacSha256);
     }
-    
+
     private void InitializeJwtParameters()
     {
         _jwtHeader = new JwtHeader(_signingCredentials);
@@ -65,10 +65,34 @@ public class JwtHandler : IJwtHandler
             ValidateAudience = false,
             ValidIssuer = _settings.Issuer,
             IssuerSigningKey = _issuerSigningKey
-        }; 
+        };
+    }
+    
+    public string CreateAccessToken(string userId)
+    {
+        var nowUtc = DateTime.UtcNow;
+        var expires = nowUtc.AddMinutes(_settings.ExpiryMinutes);
+        var centuryBegin = new DateTime(1970, 1, 1);
+        var exp = (long)(new TimeSpan(expires.Ticks - centuryBegin.Ticks).TotalSeconds);
+        var now = (long)(new TimeSpan(nowUtc.Ticks - centuryBegin.Ticks).TotalSeconds);
+        var issuer = _settings.Issuer ?? string.Empty;
+        var payload = new JwtPayload
+        {
+            { "sub", userId },
+            { "unique_name", userId },
+            { "iss", issuer },
+            { "iat", now },
+            { "nbf", now },
+            { "exp", exp },
+            { "jti", Guid.NewGuid().ToString("N") }
+        };
+        var jwt = new JwtSecurityToken(_jwtHeader, payload);
+        var token = _jwtSecurityTokenHandler.WriteToken(jwt);
+
+        return token;
     }
 
-    public Tokens Create(string userId)
+    public string CreateRefreshToken(string userId)
     {
         var nowUtc = DateTime.UtcNow;
         var expires = nowUtc.AddDays(_settings.ExpiryDays);
@@ -78,21 +102,17 @@ public class JwtHandler : IJwtHandler
         var issuer = _settings.Issuer ?? string.Empty;
         var payload = new JwtPayload
         {
-            {"sub", userId},
-            {"unique_name", userId},
-            {"iss", issuer},
-            {"iat", now},
-            {"nbf", now},
-            {"exp", exp},
-            {"jti", Guid.NewGuid().ToString("N")}
+            { "sub", userId },
+            { "unique_name", userId },
+            { "iss", issuer },
+            { "iat", now },
+            { "nbf", now },
+            { "exp", exp },
+            { "jti", Guid.NewGuid().ToString("N") }
         };
         var jwt = new JwtSecurityToken(_jwtHeader, payload);
         var token = _jwtSecurityTokenHandler.WriteToken(jwt);
 
-        return new Tokens
-        {
-            Token = token,
-            Expires = exp
-        };
+        return token;
     }
 }

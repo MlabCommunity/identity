@@ -14,9 +14,17 @@
         <PackageReference Include="Convey" Version="1.0.541" />
         <PackageReference Include="Convey.CQRS.Commands" Version="1.0.541" />
         <PackageReference Include="Convey.CQRS.Queries" Version="1.0.541" />
+        <PackageReference Include="JWT" Version="9.0.3" />
+        <PackageReference Include="Microsoft.IdentityModel.Tokens" Version="6.21.0" />
         <PackageReference Include="System.IdentityModel.Tokens.Jwt" Version="6.21.0" />
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="1.1.2" />
         <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
+    </ItemGroup>
+
+    <ItemGroup>
+      <Folder Include="Auth" />
+      <Folder Include="User\Commands\Handlers" />
+      <Folder Include="User\Queries\Handlers" />
     </ItemGroup>
 
 </Project>

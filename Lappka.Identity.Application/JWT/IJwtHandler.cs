@@ -1,9 +1,11 @@
+using System.IdentityModel.Tokens.Jwt;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Lappka.Identity.Application.JWT;
 
 public interface IJwtHandler
 {
-    Tokens Create(string userId);
-    TokenValidationParameters Parameters { get;}    
+    string CreateRefreshToken(string userId);
+    string CreateAccessToken(string userId);
+    TokenValidationParameters Parameters { get;}
 }

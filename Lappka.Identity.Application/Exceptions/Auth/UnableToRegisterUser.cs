@@ -4,7 +4,7 @@ namespace Lappka.Identity.Application.Exceptions;
 
 public class UnableToRegisterUser : ProjectException
 {
-    public UnableToRegisterUser(string message, int errorCode = 400) : base(message, errorCode)
+    public UnableToRegisterUser(string errors ,int errorCode = 400) : base("Unable to register user: "+errors, errorCode)
     {
     }
 }
