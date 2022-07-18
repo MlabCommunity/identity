@@ -21,19 +21,34 @@ internal class JwtGenerator : IJwtGenerator
         _signingCredentials = JwtParamsFactory.CreateSigningCredentials(settings);
     }
 
-    public async Task<string> GenerateToken(AppUser user)
+    private string GenerateToken(AppUser user, SecurityTokenDescriptor descriptor)
     {
-        var descriptor = new SecurityTokenDescriptor
-        {
-            Subject = (await _signInManager.CreateUserPrincipalAsync(user)).Identities.First(),
-            Expires = DateTime.Now.AddDays(_settings.ExpiryDays),
-            SigningCredentials = _signingCredentials
-        };
-
         var handler = new JwtSecurityTokenHandler();
         var secToken = new JwtSecurityTokenHandler().CreateToken(descriptor);
         var token = handler.WriteToken(secToken);
 
         return token;
+    }
+
+    public async Task<string> GenerateAccessToken(AppUser user)
+    {
+        var descriptor = new SecurityTokenDescriptor
+        {
+            Subject = (await _signInManager.CreateUserPrincipalAsync(user)).Identities.First(),
+            Expires = DateTime.Now.AddMinutes(_settings.ExpiryMins),
+            SigningCredentials = _signingCredentials
+        };
+
+        return GenerateToken(user, descriptor);
+    }
+
+    public async Task<string> GenerateRefreshToken(AppUser user)
+    {
+        var descriptor = new SecurityTokenDescriptor
+        {
+            Audience = RandomStringFactory.GetRandomString(32)
+        };
+
+        return GenerateToken(user, descriptor);
     }
 }

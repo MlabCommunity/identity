@@ -32,9 +32,12 @@ internal class UserLogQueryHandler : IQueryHandler<UserLogQuery, UserLogResult>
             throw new AuthenticationException("Invalid password.");
         }
 
-        var token = await _jwtGenerator.GenerateToken(user);
+        var accessToken = await _jwtGenerator.GenerateAccessToken(user);
+        var refreshToken = await _jwtGenerator.GenerateRefreshToken(user);
 
-        return new UserLogResult(token);
+        //todo: add refreshToken to db
+
+        return new UserLogResult(accessToken, refreshToken);
     }
 }
 

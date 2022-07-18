@@ -23,9 +23,9 @@ internal class UserInfoProvider : IUserInfoProvider
     public string Name => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
     public string Email => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Email);
 
-    AppUser IUserInfoProvider.CurrentUser()
+    public async Task<AppUser> CurrentUser()
     {
-        return Id is not null ? _context.Users.Find(Id) : null;
+        return Id is not null ? _context.Users.Find(Id) : null; // add UserExtended !!
     }
 }
 

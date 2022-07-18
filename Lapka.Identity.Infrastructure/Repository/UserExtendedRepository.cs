@@ -14,9 +14,9 @@ public class UserExtendedRepository : IUserExtendedRepository
         _context = context;
     }
 
-    public async Task CreateUserExtended(Guid id)
+    public async Task CreateUserExtended(Guid id, string firstName, string lastName)
     {
-        var userExtended = new UserExtended(id);
+        var userExtended = new UserExtended(id, firstName, lastName);
 
         var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == id);
         user.UserExtended = userExtended;

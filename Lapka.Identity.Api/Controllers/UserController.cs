@@ -24,33 +24,16 @@ public class UserController : Controller
         _userInfoProvider = userInfoProvider;
     }
 
-    [HttpPost("register")]
-    [SwaggerOperation(description: "Rejestracja użytkownika.")]
-    [SwaggerResponse(200)]
-    [SwaggerResponse(400)]
-    [SwaggerResponse(500)]
-    public async Task<IActionResult> Register([FromBody] UserRegCommand command)
-    {
-        await _commandDispatcher.SendAsync(command);
-        return NoContent();
-    }
-
-    [HttpPost("login")]
-    [SwaggerOperation(description: "Logowanie użytkownika - zwracanie tokenu.")]
-    [SwaggerResponse(204, Type = typeof(UserLogResult))]
-    [SwaggerResponse(400)]
-    [SwaggerResponse(500)]
-    public async Task<IActionResult> Login([FromBody] UserLogQuery query)
-    {
-        var token = await _queryDispatcher.QueryAsync(query);
-        return Ok(token);
-    }
-
     [Authorize]
-    [HttpGet("testAuth")]
-    public async Task<IActionResult> TestAuth()
+    [HttpGet]
+    [SwaggerOperation(description: "Informacje o użytkowniku.")]
+    [SwaggerResponse(204, Type = typeof(GetUserDataQueryResult))]
+    [SwaggerResponse(400)]
+    [SwaggerResponse(500)]
+    public async Task<IActionResult> GetUser()
     {
-        var username = _userInfoProvider.Name;
-        return Ok($"Witam pozdrawiam {username}");
+        var query = new GetUserDataQuery();
+        var userData = await _queryDispatcher.QueryAsync(query);
+        return Ok(userData);
     }
 }

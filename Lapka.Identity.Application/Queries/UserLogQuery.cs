@@ -4,5 +4,4 @@ namespace Lapka.Identity.Application.Queries;
 
 public record UserLogQuery(string EmailAddress, string Password) : IQuery<UserLogResult>;
 
-public record UserLogResult(string Token);
-
+public record UserLogResult(string AccessToken, string RefreshToken);

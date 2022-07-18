@@ -31,7 +31,7 @@ public class UserRegCommandHandler : ICommandHandler<UserRegCommand>
             throw new Exception(err);
         }
 
-        await _userExtendedRepository.CreateUserExtended(user.Id);
+        await _userExtendedRepository.CreateUserExtended(user.Id, command.FirstName, command.LastName);
     }
 }
 
