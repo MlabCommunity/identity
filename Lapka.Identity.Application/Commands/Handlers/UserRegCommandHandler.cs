@@ -1,5 +1,4 @@
-﻿using System.Xml;
-using Convey.CQRS.Commands;
+﻿using Convey.CQRS.Commands;
 using Lapka.Identity.Core.Domain.Entities;
 using Lapka.Identity.Core.IRepository;
 using Microsoft.AspNetCore.Identity;

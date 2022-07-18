@@ -11,7 +11,6 @@
 
   <ItemGroup>
     <Folder Include="Exceptions\" />
-    <Folder Include="Queries\Handlers\" />
   </ItemGroup>
 
   <ItemGroup>
@@ -20,6 +19,7 @@
     <PackageReference Include="Convey.CQRS.Queries" Version="1.0.541" />
     <PackageReference Include="FluentValidation" Version="11.1.0" />
     <PackageReference Include="FluentValidation.AspNetCore" Version="11.1.2" />
+    <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="6.0.7" />
   </ItemGroup>
 
 </Project>
