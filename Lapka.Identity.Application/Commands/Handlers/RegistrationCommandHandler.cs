@@ -5,18 +5,18 @@ using Microsoft.AspNetCore.Identity;
 
 namespace Lapka.Identity.Application.Commands.Handlers;
 
-public class UserRegCommandHandler : ICommandHandler<UserRegCommand>
+public class RegistrationCommandHandler : ICommandHandler<RegistrationCommand>
 {
     private readonly UserManager<AppUser> _userManager;
     private readonly IUserExtendedRepository _userExtendedRepository;
 
-    public UserRegCommandHandler(UserManager<AppUser> userManager, IUserExtendedRepository userExtendedRepository)
+    public RegistrationCommandHandler(UserManager<AppUser> userManager, IUserExtendedRepository userExtendedRepository)
     {
         _userManager = userManager;
         _userExtendedRepository = userExtendedRepository;
     }
 
-    public async Task HandleAsync(UserRegCommand command, CancellationToken cancellationToken = new CancellationToken())
+    public async Task HandleAsync(RegistrationCommand command, CancellationToken cancellationToken = new CancellationToken())
     {
         var user = new AppUser
         {

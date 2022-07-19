@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using Lapka.Identity.Application;
 using Lapka.Identity.Application.Interfaces;
 using Lapka.Identity.Core.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -21,7 +22,7 @@ internal class JwtGenerator : IJwtGenerator
         _signingCredentials = JwtParamsFactory.CreateSigningCredentials(settings);
     }
 
-    private string GenerateToken(AppUser user, SecurityTokenDescriptor descriptor)
+    private string GenerateToken(SecurityTokenDescriptor descriptor)
     {
         var handler = new JwtSecurityTokenHandler();
         var secToken = new JwtSecurityTokenHandler().CreateToken(descriptor);
@@ -39,16 +40,16 @@ internal class JwtGenerator : IJwtGenerator
             SigningCredentials = _signingCredentials
         };
 
-        return GenerateToken(user, descriptor);
+        return GenerateToken(descriptor);
     }
 
-    public async Task<string> GenerateRefreshToken(AppUser user)
+    public string GenerateRefreshToken()
     {
         var descriptor = new SecurityTokenDescriptor
         {
-            Audience = RandomStringFactory.GetRandomString(32)
+            Audience = Guid.NewGuid().ToString()
         };
 
-        return GenerateToken(user, descriptor);
+        return GenerateToken(descriptor);
     }
 }

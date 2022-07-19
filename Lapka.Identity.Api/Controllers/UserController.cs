@@ -1,6 +1,5 @@
 ﻿using Convey.CQRS.Commands;
 using Convey.CQRS.Queries;
-using Lapka.Identity.Application.Commands;
 using Lapka.Identity.Application.Interfaces;
 using Lapka.Identity.Application.Queries;
 using Microsoft.AspNetCore.Authorization;

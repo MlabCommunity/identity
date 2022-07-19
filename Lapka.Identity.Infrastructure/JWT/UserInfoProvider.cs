@@ -3,6 +3,7 @@ using Lapka.Identity.Application.Interfaces;
 using Lapka.Identity.Core.Domain.Entities;
 using Lapka.Identity.Infrastructure.DataBase;
 using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 
 namespace Lapka.Identity.Infrastructure.JWT;
 
@@ -23,9 +24,16 @@ internal class UserInfoProvider : IUserInfoProvider
     public string Name => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
     public string Email => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Email);
 
-    public async Task<AppUser> CurrentUser()
+    public async Task<AppUser> GetCurrentUser()
     {
-        return Id is not null ? _context.Users.Find(Id) : null; // add UserExtended !!
+        if (Id is null)
+        {
+            return null;
+        }
+
+        return await _context.Users
+            .Include(x => x.UserExtended)
+            .FirstOrDefaultAsync(x => x.Id == Id);
     }
 }
 

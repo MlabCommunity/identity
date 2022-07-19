@@ -1,33 +1,54 @@
-﻿using Convey.CQRS.Queries;
+﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
+using Convey.CQRS.Queries;
 using Lapka.Identity.Application.Interfaces;
 using Lapka.Identity.Core.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 
 namespace Lapka.Identity.Application.Queries.Handlers;
 
 internal class UseRefreshTokenQueryHandler : IQueryHandler<UseRefreshTokenQuery, UseRefreshTokenResult>
 {
-    private readonly IConfiguration _config;
-    private readonly SignInManager<AppUser> _signInManager;
+    private readonly JwtSettings _jwtSettings;
     private readonly IJwtGenerator _jwtGenerator;
+    private readonly IAppUserRepository _appUserRepository;
+    private readonly ITokenRepository _tokenRepository;
 
-    public UseRefreshTokenQueryHandler(IConfiguration config, SignInManager<AppUser> signInManager, IJwtGenerator jwtGenerator)
+    public UseRefreshTokenQueryHandler(JwtSettings jwtSettings, IJwtGenerator jwtGenerator,
+        IAppUserRepository appUserRepository, ITokenRepository tokenRepository)
     {
-        _config = config;
-        _signInManager = signInManager;
+        _jwtSettings = jwtSettings;
         _jwtGenerator = jwtGenerator;
+        _appUserRepository = appUserRepository;
+        _tokenRepository = tokenRepository;
     }
 
-    public Task<UseRefreshTokenResult> HandleAsync(UseRefreshTokenQuery query, CancellationToken cancellationToken = new CancellationToken())
+    public async Task<UseRefreshTokenResult> HandleAsync(UseRefreshTokenQuery query, CancellationToken cancellationToken = new CancellationToken())
     {
-        // check refreshtoken in db
-        //get user from accessToken
+        var handler = new JwtSecurityTokenHandler();
+        var jwtSecurityToken = handler.ReadJwtToken(query.AccessToken);
+        var idS = jwtSecurityToken.Claims.FirstOrDefault(c => c.Type == "nameid");
 
-        //var accessToken = _jwtGenerator.GenerateAccessToken(user)
-        // return accessToken
+        if (idS is null || !Guid.TryParse(idS.Value, out var parsedId))
+        {
+            throw new Exception("Incorrect data");
+        }
 
-        
-        throw new NotImplementedException();
+        var user = await _appUserRepository.GetUserById(parsedId);
+        if (user is null)
+        {
+            throw new Exception("User doesn't exist");
+        }
+
+        var appToken = await _tokenRepository.GetRefreshToken(query.RefreshToken, parsedId);
+
+        if (appToken.CreatedAt.AddMonths(_jwtSettings.RefreshExpiryMonths) < DateTime.UtcNow)
+        {
+            await _tokenRepository.RemoveRefreshToken(appToken);
+            throw new Exception("Invalid refresh token");
+        }
+
+        var accessToken = await _jwtGenerator.GenerateAccessToken(user);
+        return new UseRefreshTokenResult(accessToken);
     }
 }

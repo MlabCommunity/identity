@@ -7,7 +7,12 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lapka.Identity.Infrastructure.DataBase;
 
-public class DataContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid>
+public class DataContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid,
+        IdentityUserClaim<Guid>,
+        IdentityUserRole<Guid>,
+        IdentityUserLogin<Guid>,
+        IdentityRoleClaim<Guid>,
+        AppToken>
 {
     public DbSet<UserExtended> UsersExtended;
 

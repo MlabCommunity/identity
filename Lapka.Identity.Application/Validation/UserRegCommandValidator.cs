@@ -3,7 +3,7 @@ using Lapka.Identity.Application.Commands;
 
 namespace Lapka.Identity.Application.Validation;
 
-public class UserRegCommandValidator : AbstractValidator<UserRegCommand>
+public class UserRegCommandValidator : AbstractValidator<RegistrationCommand>
 {
     private const string rule = @"^[a-zA-Z0-9_\-\.]+$";
     public UserRegCommandValidator()

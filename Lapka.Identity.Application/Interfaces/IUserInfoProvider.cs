@@ -7,5 +7,5 @@ public interface IUserInfoProvider
     Guid? Id { get; }
     String Name { get; }
     String Email { get; }
-    Task<AppUser> CurrentUser();
+    Task<AppUser> GetCurrentUser();
 }

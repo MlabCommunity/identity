@@ -1,4 +1,5 @@
-﻿using Lapka.Identity.Infrastructure;
+﻿using Lapka.Identity.Application;
+using Lapka.Identity.Infrastructure;
 using Lapka.Identity.Infrastructure.JWT;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 

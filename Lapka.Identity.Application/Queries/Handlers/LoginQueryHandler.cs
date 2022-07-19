@@ -7,18 +7,18 @@ using Microsoft.Extensions.Configuration;
 
 namespace Lapka.Identity.Application.Queries.Handlers;
 
-internal class UserLogQueryHandler : IQueryHandler<UserLogQuery, UserLogResult>
+internal class LoginQueryHandler : IQueryHandler<LoginQuery, LoginResult>
 {
     private readonly SignInManager<AppUser> _signInManager;
     private readonly IJwtGenerator _jwtGenerator;
 
-    public UserLogQueryHandler(IConfiguration config, SignInManager<AppUser> signInManager, IJwtGenerator jwtGenerator)
+    public LoginQueryHandler(IConfiguration config, SignInManager<AppUser> signInManager, IJwtGenerator jwtGenerator)
     {
         _signInManager = signInManager;
         _jwtGenerator = jwtGenerator;
     }
 
-    public async Task<UserLogResult> HandleAsync(UserLogQuery query, CancellationToken cancellationToken = new CancellationToken())
+    public async Task<LoginResult> HandleAsync(LoginQuery query, CancellationToken cancellationToken = new CancellationToken())
     {
         var user = await _signInManager.UserManager.FindByEmailAsync(query.EmailAddress);
         if (user is null)
@@ -33,11 +33,12 @@ internal class UserLogQueryHandler : IQueryHandler<UserLogQuery, UserLogResult>
         }
 
         var accessToken = await _jwtGenerator.GenerateAccessToken(user);
-        var refreshToken = await _jwtGenerator.GenerateRefreshToken(user);
+        var refreshToken = _jwtGenerator.GenerateRefreshToken();
 
-        //todo: add refreshToken to db
+        await _signInManager.UserManager
+            .SetAuthenticationTokenAsync(user, "refreshToken", refreshToken, refreshToken);
 
-        return new UserLogResult(accessToken, refreshToken);
+        return new LoginResult(accessToken, refreshToken);
     }
 }
 

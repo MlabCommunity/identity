@@ -29,7 +29,7 @@ public class AuthController : Controller
     [SwaggerResponse(200)]
     [SwaggerResponse(400)]
     [SwaggerResponse(500)]
-    public async Task<IActionResult> Register([FromBody] UserRegCommand command)
+    public async Task<IActionResult> Register([FromBody] RegistrationCommand command)
     {
         await _commandDispatcher.SendAsync(command);
         return NoContent();
@@ -37,28 +37,25 @@ public class AuthController : Controller
 
     [HttpPost("login")]
     [SwaggerOperation(description: "Logowanie użytkownika - zwracanie tokenu.")]
-    [SwaggerResponse(204, Type = typeof(UserLogResult))]
+    [SwaggerResponse(204, Type = typeof(LoginResult))]
     [SwaggerResponse(400)]
     [SwaggerResponse(500)]
-    public async Task<IActionResult> Login([FromBody] UserLogQuery query)
+    public async Task<IActionResult> Login([FromBody] LoginQuery query)
     {
         var tokens = await _queryDispatcher.QueryAsync(query);
         return Ok(tokens);
     }
 
-    [HttpPost("use")]
+    [HttpPost("useRefreshToken")]
     [SwaggerOperation(description: "Odnawia access token na podstawie refresh token")]
     [SwaggerResponse(204, Type = typeof(UseRefreshTokenResult))]
     [SwaggerResponse(400)]
     [SwaggerResponse(500)]
     public async Task<IActionResult> UseRefreshToken([FromBody] UseRefreshTokenQuery query)
     {
-        //var token = await _queryDispatcher.QueryAsync(query);
-        //return Ok(token);
-        return null;
+        var token = await _queryDispatcher.QueryAsync(query);
+        return Ok(token);
     }
-
-
 
     [Authorize]
     [HttpGet("testAuth")]

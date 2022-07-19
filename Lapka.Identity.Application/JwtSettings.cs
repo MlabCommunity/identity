@@ -1,4 +1,4 @@
-﻿namespace Lapka.Identity.Infrastructure.JWT;
+﻿namespace Lapka.Identity.Application;
 
 public class JwtSettings
 {
@@ -7,4 +7,5 @@ public class JwtSettings
     public string RsaPrivateKeyPath { get; set; }
     public string RsaPublicKeyPath { get; set; }
     public int RefreshExpiryMonths { get; set; }
+    public TimeSpan ClockSkew { get; set; }
 }

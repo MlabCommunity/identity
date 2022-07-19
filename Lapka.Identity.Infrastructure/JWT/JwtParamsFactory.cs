@@ -1,4 +1,5 @@
 ﻿using System.Security.Cryptography;
+using Lapka.Identity.Application;
 using Microsoft.IdentityModel.Tokens;
 
 namespace Lapka.Identity.Infrastructure.JWT;
@@ -31,7 +32,8 @@ public static class JwtParamsFactory
             ValidateAudience = false,
             ValidateIssuer = false,
             ValidIssuer = settings.Issuer,
-            IssuerSigningKey = issuerSigningKey
+            IssuerSigningKey = issuerSigningKey,
+            ClockSkew = settings.ClockSkew
         };
     }
 }
