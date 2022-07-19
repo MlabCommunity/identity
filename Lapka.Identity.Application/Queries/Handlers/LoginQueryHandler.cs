@@ -31,7 +31,7 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, LoginResult>
         var result = await _signInManager.CheckPasswordSignInAsync(user, query.Password, false);
         if (!result.Succeeded)
         {
-            throw new AuthenticationException("Invalid password.");
+            throw new AuthenticationException("Invalid Password.");
         }
 
         var accessToken = await _jwtGenerator.GenerateAccessToken(user);

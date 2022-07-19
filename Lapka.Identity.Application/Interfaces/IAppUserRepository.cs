@@ -5,5 +5,8 @@ public interface IAppUserRepository
 {
     Task<AppUser> GetUserById(Guid id);
     Task<AppUser> GetFullUserById(Guid id);
+    Task UpdateUserData(AppUser user);
+    bool CheckUsernameAvailability(string username);
+    bool CheckUsernameEmail(string email);
 }
 

@@ -8,6 +8,7 @@ namespace Lapka.Identity.Infrastructure.Repository;
 internal class AppUserRepository : IAppUserRepository
 {
     private readonly DataContext _context;
+    private readonly UserExtendedRepository _userExtendedRepository;
 
     public AppUserRepository(DataContext context)
     {
@@ -24,6 +25,22 @@ internal class AppUserRepository : IAppUserRepository
         return await _context.Users
             .Include(x => x.UserExtended)
             .FirstOrDefaultAsync(x => x.Id == id);
+    }
+
+    public async Task UpdateUserData(AppUser user)
+    {
+        _context.Users.Update(user);
+        await _context.SaveChangesAsync();
+    }
+
+    public bool CheckUsernameAvailability(string username)
+    {
+        return _context.Users.Count(x => x.NormalizedUserName == username.ToUpper()) <= 0;
+    }
+
+    public bool CheckUsernameEmail(string email)
+    {
+        return _context.Users.Count(x => x.Email == email) <= 0;
     }
 }
 

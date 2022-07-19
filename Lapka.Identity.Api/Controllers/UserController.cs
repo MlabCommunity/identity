@@ -1,7 +1,9 @@
 ﻿using Convey.CQRS.Commands;
 using Convey.CQRS.Queries;
+using Lapka.Identity.Application.Commands;
 using Lapka.Identity.Application.Interfaces;
 using Lapka.Identity.Application.Queries;
+using Lapka.Identity.Application.Validation.RequestWithValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -47,5 +49,40 @@ public class UserController : Controller
         var query = new GetUserDataByIdQuery(id);
         var userData = await _queryDispatcher.QueryAsync(query);
         return Ok(userData);
+    }
+
+    [HttpPatch]
+    [SwaggerOperation(description: "Aktualizuj Informacje o zalogowanym użytkowniku.")]
+    [SwaggerResponse(200)]
+    [SwaggerResponse(400)]
+    [SwaggerResponse(500)]
+    public async Task<IActionResult> UpdateUserData([FromBody] UpdateUserDataCommand command)
+    {
+        await _commandDispatcher.SendAsync(command);
+        return NoContent();
+    }
+
+    [HttpPatch("Password")]
+    [SwaggerOperation(description: "Aktualizuj hasło zalogowanego użytkownika.")]
+    [SwaggerResponse(200)]
+    [SwaggerResponse(400)]
+    [SwaggerResponse(500)]
+    public async Task<IActionResult> UpdateUserPassword([FromBody] UpdateUserPasswordRequest request)
+    {
+        var command = new UpdateUserPasswordCommand(request.Password);
+        await _commandDispatcher.SendAsync(command);
+        return NoContent();
+    }
+
+    [HttpPatch("email")]
+    [SwaggerOperation(description: "Aktualizuj email zalogowanego użytkownika.")]
+    [SwaggerResponse(200)]
+    [SwaggerResponse(400)]
+    [SwaggerResponse(500)]
+    public async Task<IActionResult> UpdateUserEmail([FromBody] string email)
+    {
+        var command = new UpdateUserEmailCommand(email);
+        await _commandDispatcher.SendAsync(command);
+        return NoContent();
     }
 }

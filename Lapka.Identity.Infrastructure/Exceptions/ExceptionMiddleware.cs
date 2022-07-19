@@ -1,4 +1,5 @@
 ﻿using System.Text.Json;
+using FluentValidation;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -28,6 +29,16 @@ public sealed class ExceptionMiddleware : IMiddleware
             context.Response.Headers.Add("content-type", "application/json");
 
             var json = JsonSerializer.Serialize(new { ErrorCode = errorCode, pex.Message });
+            await context.Response.WriteAsync(json);
+        }
+        catch (ValidationException vex)
+        {
+            _logger.LogError(vex, "validate error");
+            var errorCode = 400;
+            context.Response.StatusCode = errorCode;
+            context.Response.Headers.Add("content-type", "application/json");
+
+            var json = JsonSerializer.Serialize(new { ErrorCode = errorCode, vex.Message });
             await context.Response.WriteAsync(json);
         }
         catch (Exception ex)
