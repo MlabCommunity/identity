@@ -11,11 +11,13 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, LoginResult>
 {
     private readonly SignInManager<AppUser> _signInManager;
     private readonly IJwtGenerator _jwtGenerator;
+    private readonly IAppTokenRepository _appTokenRepository;
 
-    public LoginQueryHandler(IConfiguration config, SignInManager<AppUser> signInManager, IJwtGenerator jwtGenerator)
+    public LoginQueryHandler(IConfiguration config, SignInManager<AppUser> signInManager, IJwtGenerator jwtGenerator, IAppTokenRepository appTokenRepository)
     {
         _signInManager = signInManager;
         _jwtGenerator = jwtGenerator;
+        _appTokenRepository = appTokenRepository;
     }
 
     public async Task<LoginResult> HandleAsync(LoginQuery query, CancellationToken cancellationToken = new CancellationToken())
@@ -35,8 +37,7 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, LoginResult>
         var accessToken = await _jwtGenerator.GenerateAccessToken(user);
         var refreshToken = _jwtGenerator.GenerateRefreshToken();
 
-        await _signInManager.UserManager
-            .SetAuthenticationTokenAsync(user, "refreshToken", refreshToken, refreshToken);
+        await _appTokenRepository.AddRefreshToken(user.Id, refreshToken);
 
         return new LoginResult(accessToken, refreshToken);
     }

@@ -1,7 +1,6 @@
 ﻿using Convey.CQRS.Commands;
 using Convey.CQRS.Queries;
 using Lapka.Identity.Application.Commands;
-using Lapka.Identity.Application.Interfaces;
 using Lapka.Identity.Application.Queries;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
@@ -15,13 +14,11 @@ public class AuthController : Controller
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;
-    private readonly IUserInfoProvider _userInfoProvider;
 
-    public AuthController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher, IUserInfoProvider userInfoProvider)
+    public AuthController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
     {
         _commandDispatcher = commandDispatcher;
         _queryDispatcher = queryDispatcher;
-        _userInfoProvider = userInfoProvider;
     }
 
     [HttpPost("register")]
@@ -58,10 +55,14 @@ public class AuthController : Controller
     }
 
     [Authorize]
-    [HttpGet("testAuth")]
-    public async Task<IActionResult> TestAuth()
+    [HttpPost("revokeRefreshToken")]
+    [SwaggerOperation(description: "Usuwa refresh token z bazy")]
+    [SwaggerResponse(200)]
+    [SwaggerResponse(400)]
+    [SwaggerResponse(500)]
+    public async Task<IActionResult> RevokeRefreshToken([FromBody] RevokeRefreshTokenCommand command)
     {
-        var username = _userInfoProvider.Name;
-        return Ok($"Witam pozdrawiam {username}");
+        await _commandDispatcher.SendAsync(command);
+        return NoContent();
     }
 }

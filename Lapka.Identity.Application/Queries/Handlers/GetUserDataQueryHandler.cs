@@ -18,11 +18,12 @@ internal class GetUserDataQueryHandler : IQueryHandler<GetUserDataQuery, GetUser
     public async Task<GetUserDataQueryResult> HandleAsync(GetUserDataQuery query, CancellationToken cancellationToken = new CancellationToken())
     {
         var user = await _userInfoProvider.GetCurrentUser();
-        var userData = new GetUserDataQueryResult(user.Id, user.UserName,
+
+        var userData = new GetUserDataQueryResult(user.Id, user.UserName,   //consider: add auto mapper?
             user.UserExtended.FirstName, user.UserExtended.LastName,
             user.Email, user.UserExtended.CreatedAt);
 
         return userData;
     }
-}
+}   
 

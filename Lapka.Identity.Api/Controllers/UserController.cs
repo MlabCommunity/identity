@@ -25,13 +25,26 @@ public class UserController : Controller
 
     [Authorize]
     [HttpGet]
-    [SwaggerOperation(description: "Informacje o użytkowniku.")]
+    [SwaggerOperation(description: "Informacje o zalogowanym użytkowniku.")]
     [SwaggerResponse(204, Type = typeof(GetUserDataQueryResult))]
     [SwaggerResponse(400)]
     [SwaggerResponse(500)]
     public async Task<IActionResult> GetUser()
     {
         var query = new GetUserDataQuery();
+        var userData = await _queryDispatcher.QueryAsync(query);
+        return Ok(userData);
+    }
+
+    [Authorize]
+    [HttpGet("{id}")]
+    [SwaggerOperation(description: "Informacje o użytkowniku o podanym id.")]
+    [SwaggerResponse(204, Type = typeof(GetUserDataQueryResult))]
+    [SwaggerResponse(400)]
+    [SwaggerResponse(500)]
+    public async Task<IActionResult> GetUserById([FromRoute] Guid id)
+    {
+        var query = new GetUserDataByIdQuery(id);
         var userData = await _queryDispatcher.QueryAsync(query);
         return Ok(userData);
     }

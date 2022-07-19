@@ -1,9 +1,6 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
-using System.Security.Claims;
 using Convey.CQRS.Queries;
 using Lapka.Identity.Application.Interfaces;
-using Lapka.Identity.Core.Domain.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace Lapka.Identity.Application.Queries.Handlers;
 
@@ -12,15 +9,15 @@ internal class UseRefreshTokenQueryHandler : IQueryHandler<UseRefreshTokenQuery,
     private readonly JwtSettings _jwtSettings;
     private readonly IJwtGenerator _jwtGenerator;
     private readonly IAppUserRepository _appUserRepository;
-    private readonly ITokenRepository _tokenRepository;
+    private readonly IAppTokenRepository _appTokenRepository;
 
     public UseRefreshTokenQueryHandler(JwtSettings jwtSettings, IJwtGenerator jwtGenerator,
-        IAppUserRepository appUserRepository, ITokenRepository tokenRepository)
+        IAppUserRepository appUserRepository, IAppTokenRepository appTokenRepository)
     {
         _jwtSettings = jwtSettings;
         _jwtGenerator = jwtGenerator;
         _appUserRepository = appUserRepository;
-        _tokenRepository = tokenRepository;
+        _appTokenRepository = appTokenRepository;
     }
 
     public async Task<UseRefreshTokenResult> HandleAsync(UseRefreshTokenQuery query, CancellationToken cancellationToken = new CancellationToken())
@@ -40,12 +37,17 @@ internal class UseRefreshTokenQueryHandler : IQueryHandler<UseRefreshTokenQuery,
             throw new Exception("User doesn't exist");
         }
 
-        var appToken = await _tokenRepository.GetRefreshToken(query.RefreshToken, parsedId);
+        var appToken = await _appTokenRepository.GetRefreshToken(parsedId, query.RefreshToken);
+
+        if (appToken is null)
+        {
+            throw new Exception("Login required.");
+        }
 
         if (appToken.CreatedAt.AddMonths(_jwtSettings.RefreshExpiryMonths) < DateTime.UtcNow)
         {
-            await _tokenRepository.RemoveRefreshToken(appToken);
-            throw new Exception("Invalid refresh token");
+            await _appTokenRepository.RemoveRefreshToken(appToken);
+            throw new Exception("Login required.");
         }
 
         var accessToken = await _jwtGenerator.GenerateAccessToken(user);

@@ -27,7 +27,7 @@ public static class InfrastuctureExtensions
         services.AddScoped<IUserExtendedRepository, UserExtendedRepository>();
         services.AddScoped<IJwtGenerator, JwtGenerator>(); // singleton?
         services.AddScoped<IUserInfoProvider, UserInfoProvider>();
-        services.AddScoped<ITokenRepository, TokenRepository>();
+        services.AddScoped<IAppTokenRepository, AppTokenRepository>();
         services.AddScoped<IAppUserRepository, AppUserRepository>();
 
         return services;
