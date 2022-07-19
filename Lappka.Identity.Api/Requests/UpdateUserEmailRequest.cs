@@ -4,6 +4,6 @@ namespace Lappka.Identity.Api.Requests;
 
 public class UpdateUserEmailRequest
 {
-    [Required]
+    [Required, EmailAddress]
     public string Email { get; set; }
 }

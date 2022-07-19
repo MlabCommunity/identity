@@ -1,6 +1,6 @@
 using Microsoft.OpenApi.Models;
 
-namespace Lappka.Identity.Api;
+namespace Lappka.Identity.Api.Extensions;
 
 public static class SwaggerExtension
 {

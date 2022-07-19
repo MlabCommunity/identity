@@ -1,8 +1,7 @@
 using Lappka.Identity.Application.JWT;
-using Lappka.Identity.Infrastructure.Postgres.Options;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
-namespace Lappka.Identity.Api;
+namespace Lappka.Identity.Api.Extensions;
 
 public static class AuthExtension
 {

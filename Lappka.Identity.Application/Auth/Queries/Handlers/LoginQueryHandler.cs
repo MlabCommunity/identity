@@ -1,40 +1,38 @@
-
 using Convey.CQRS.Queries;
-using Lappka.Identity.Application.Auth.Queries;
-using Lappka.Identity.Application.Exceptions;
 using Lappka.Identity.Application.Exceptions.Res;
 using Lappka.Identity.Application.JWT;
 using Lappka.Identity.Core.Entities;
+using Lappka.Identity.Core.Repositories;
 using Microsoft.AspNetCore.Identity;
 
+namespace Lappka.Identity.Application.Auth.Queries.Handlers;
 
-namespace Lappka.Identity.Application.Queries.Handlers;
-
-public class LoginQueryHandler : IQueryHandler<LoginQuery, JwtResponse>
+public class LoginQueryHandler : IQueryHandler<LoginQuery, TokensResponse>
 {
     private readonly SignInManager<ApplicationUser> _signInManager;
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly ITokenRepository _tokenRepository;
     private readonly IJwtHandler _jwtHandler;
 
-    public LoginQueryHandler(SignInManager<ApplicationUser> signInManager, UserManager<ApplicationUser> userManager,
+    public LoginQueryHandler(SignInManager<ApplicationUser> signInManager, ITokenRepository tokenRepository,
         IJwtHandler jwtHandler)
     {
+        _tokenRepository = tokenRepository;
         _signInManager = signInManager;
-        _userManager = userManager;
         _jwtHandler = jwtHandler;
     }
 
-    public async Task<JwtResponse> HandleAsync(LoginQuery query,
+    public async Task<TokensResponse> HandleAsync(LoginQuery query,
         CancellationToken cancellationToken = new CancellationToken())
     {
-        var user = await _userManager.FindByEmailAsync(query.Email);
+        var user = await _signInManager.UserManager.FindByEmailAsync(query.Email);
+
         if (user is null)
         {
             throw new UserNotFoundException();
-        } 
-        
+        }
+
         var result = await _signInManager.PasswordSignInAsync(user,
-            query.Password, query.RememberMe, lockoutOnFailure: true);
+            query.Password, false, lockoutOnFailure: true);
 
         if (!result.Succeeded)
         {
@@ -46,10 +44,22 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, JwtResponse>
             throw new AccountIsLockedException();
         }
 
-        return new JwtResponse
+        var refreshToken = _jwtHandler.CreateRefreshToken();
+        
+        var appToken = new ApplicationToken()
+        {
+            LoginProvider = "Lappka",
+            Name = Guid.NewGuid().ToString(),
+            Value = refreshToken,
+            UserId = user.Id
+        };
+
+        await _tokenRepository.AddRefreshToken(appToken);
+        
+        return new TokensResponse
         {
             AccessToken = _jwtHandler.CreateAccessToken(user.Id),
-            RefreshToken = _jwtHandler.CreateRefreshToken()
+            RefreshToken = refreshToken
         };
     }
 }

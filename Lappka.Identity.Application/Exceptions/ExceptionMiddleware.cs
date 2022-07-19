@@ -1,5 +1,4 @@
 using System.Text.Json;
-using Lappka.Identity.Application.Exceptions;
 using Microsoft.AspNetCore.Http;
 
 namespace Lappka.Identity.Application.Exceptions;

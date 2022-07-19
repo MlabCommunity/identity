@@ -23,24 +23,37 @@ public class AuthController : ControllerBase
     }
 
     [HttpPost("register")]
-    public async Task<IActionResult> RegisterAsync([FromBody] RegistrationCommand command)
+    public async Task<IActionResult> RegisterAsync([FromBody] RegistrationRequest request)
     {
+        var command = new RegistrationCommand()
+        {
+            Email = request.Email,
+            Username = request.Username,
+            Password = request.Password,
+            ConfirmPassword = request.ConfirmPassword,
+        };
+
         await _commandDispatcher.SendAsync(command);
         return Ok();
     }
 
     [HttpPost("login")]
-    public async Task<IActionResult> LoginAsync(LoginQuery query)
+    public async Task<IActionResult> LoginAsync(LoginRequest request)
     {
-        var token = await _queryDispatcher.QueryAsync(query);
-        return Ok(token);
+        var query = new LoginQuery
+        {
+            Email = request.Email,
+            Password = request.Password
+        };
+
+        var tokens = await _queryDispatcher.QueryAsync(query);
+        return Ok(tokens);
     }
 
-    [HttpPost("recreate")]
-    [Authorize]
-    public async Task<IActionResult> RefreshTokensAsync([FromBody] RecreateTokenRequest request)
+    [HttpPost("use")]
+    public async Task<IActionResult> UseTokensAsync([FromBody] UseTokenRequest request)
     {
-        var query = new RecreateTokenQuery
+        var query = new UseTokenQuery
         {
             AccessToken = request.AccessToken,
             RefreshToken = request.RefreshToken
@@ -48,11 +61,18 @@ public class AuthController : ControllerBase
         var token = await _queryDispatcher.QueryAsync(query);
         return Ok(token);
     }
-    
-    [HttpGet]
+
+    [HttpPost("revoke")]
     [Authorize]
-    public IActionResult Hello()
+    public async Task<IActionResult> RevokeTokenAsync([FromBody] RevokeTokenRequest request)
     {
-        return Ok(User.FindFirstValue(ClaimTypes.NameIdentifier));
+        var command = new RevokeTokenCommand
+        {
+            UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+            RefreshToken = request.RefreshToken
+        };
+
+        await _commandDispatcher.SendAsync(command);
+        return Ok();
     }
 }

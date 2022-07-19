@@ -4,6 +4,6 @@ namespace Lappka.Identity.Core.Entities;
 
 public class ApplicationUser : IdentityUser
 {
-    public UserExtended UserExtended { get; set; }
+    public UserExtended UserExtended { get; protected set; }
     
 }

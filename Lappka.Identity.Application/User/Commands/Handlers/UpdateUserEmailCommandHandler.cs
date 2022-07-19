@@ -1,5 +1,4 @@
 using Convey.CQRS.Commands;
-using Lappka.Identity.Application.Exceptions;
 using Lappka.Identity.Application.Exceptions.Res;
 using Lappka.Identity.Core.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -18,20 +17,20 @@ public class UpdateUserEmailCommandHandler : ICommandHandler<UpdateUserEmailComm
     
     public async Task HandleAsync(UpdateUserEmailCommand command, CancellationToken cancellationToken = new CancellationToken())
     {
-        if (command.Id is null)
+        if (command.UserId is null)
         {
             throw new UserNotFoundException();
         }
 
-        var user = _userManager.FindByIdAsync(command.Id);
+        var user = await _userManager.FindByIdAsync(command.UserId);
         
         if (user is null)
         {
             throw new UserNotFoundException();
         }
         
-        user.Result.Email = command.Email;
+        user.Email = command.Email;
 
-        await _userManager.UpdateAsync(user.Result);
+        await _userManager.UpdateAsync(user);
     }
 }

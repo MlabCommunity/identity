@@ -3,7 +3,7 @@ using Lappka.Identity.Application.JWT;
 
 namespace Lappka.Identity.Application.Auth.Queries;
 
-public record RecreateTokenQuery : IQuery<JwtResponse>
+public record UseTokenQuery : IQuery<TokensResponse>
 {
     public string AccessToken { get; set; }
     public string RefreshToken { get; set; }

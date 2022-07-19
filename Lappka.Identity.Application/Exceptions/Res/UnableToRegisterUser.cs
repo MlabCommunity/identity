@@ -1,5 +1,3 @@
-using Lappka.Identity.Application.Exceptions;
-
 namespace Lappka.Identity.Application.Exceptions.Res;
 
 public class UnableToRegisterUser : ProjectException

@@ -5,7 +5,6 @@ using System.Text;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-
 namespace Lappka.Identity.Application.JWT;
 
 public class JwtHandler : IJwtHandler
@@ -14,7 +13,6 @@ public class JwtHandler : IJwtHandler
     private readonly JwtSecurityTokenHandler _jwtSecurityTokenHandler = new JwtSecurityTokenHandler();
     private SecurityKey _issuerSigningKey;
     private SigningCredentials _signingCredentials;
-    private JwtHeader _jwtHeader;
     public TokenValidationParameters Parameters { get; private set; }
 
 
@@ -60,7 +58,6 @@ public class JwtHandler : IJwtHandler
 
     private void InitializeJwtParameters()
     {
-        _jwtHeader = new JwtHeader(_signingCredentials);
         Parameters = new TokenValidationParameters
         {
             ClockSkew = TimeSpan.Zero,
@@ -71,29 +68,23 @@ public class JwtHandler : IJwtHandler
         };
     }
 
+    public JwtSecurityToken DecodeToken(string token)
+    {
+        return _jwtSecurityTokenHandler.ReadJwtToken(token);
+    }
+
     public string CreateAccessToken(string userId)
     {
-        var halo = DateTime.Now.AddMinutes(_settings.ExpiryMinutes); //tutaj
-
+        var expires = DateTime.UtcNow.AddMinutes(_settings.ExpiryMinutes);
         var issuer = _settings.Issuer ?? string.Empty;
-
+        
         var claims = new List<Claim>()
         {
             new Claim(ClaimTypes.NameIdentifier, userId),
         };
 
-        var x = new JwtSecurityToken(issuer, issuer, claims, expires: halo, signingCredentials: _signingCredentials);
-        /*var payload = new JwtPayload
-        {
-            { "sub", userId },
-            { "unique_name", userId },
-            { "iss", issuer },
-            { "iat", now },
-            { "nbf", now },
-            { "exp", exp },
-        };
-        */
-        var token = _jwtSecurityTokenHandler.WriteToken(x);
+        var jwtPayload = new JwtSecurityToken(issuer, issuer, claims, expires: expires, signingCredentials: _signingCredentials);
+        var token = _jwtSecurityTokenHandler.WriteToken(jwtPayload);
 
         return token;
     }

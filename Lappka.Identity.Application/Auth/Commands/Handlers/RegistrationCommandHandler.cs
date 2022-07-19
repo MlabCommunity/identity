@@ -1,5 +1,4 @@
 using Convey.CQRS.Commands;
-using Lappka.Identity.Application.Exceptions;
 using Lappka.Identity.Application.Exceptions.Res;
 using Lappka.Identity.Core.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -20,12 +19,11 @@ public class RegistrationCommandHandler : ICommandHandler<RegistrationCommand>
     {
         if (!command.Password.Equals(command.ConfirmPassword))
         {
-            throw new PasswordsAreDifferentException();
+            throw new DifferentPasswordException();
         }
         
         var user = new ApplicationUser { UserName = command.Username, Email = command.Email };
         var result = await _userManager.CreateAsync(user, command.Password);
-        
         
         if (!result.Succeeded)
         {
