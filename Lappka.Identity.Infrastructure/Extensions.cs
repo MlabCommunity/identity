@@ -12,6 +12,4 @@ public static class Extensions
         services.AddHostedService<DbMigrator>();
         return services;
     }
-    
-
 }

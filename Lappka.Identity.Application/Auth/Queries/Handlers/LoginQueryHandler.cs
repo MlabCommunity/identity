@@ -1,7 +1,8 @@
 
 using Convey.CQRS.Queries;
-
+using Lappka.Identity.Application.Auth.Queries;
 using Lappka.Identity.Application.Exceptions;
+using Lappka.Identity.Application.Exceptions.Res;
 using Lappka.Identity.Application.JWT;
 using Lappka.Identity.Core.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -30,8 +31,8 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, JwtResponse>
         if (user is null)
         {
             throw new UserNotFoundException();
-        }
-
+        } 
+        
         var result = await _signInManager.PasswordSignInAsync(user,
             query.Password, query.RememberMe, lockoutOnFailure: true);
 
@@ -48,7 +49,7 @@ public class LoginQueryHandler : IQueryHandler<LoginQuery, JwtResponse>
         return new JwtResponse
         {
             AccessToken = _jwtHandler.CreateAccessToken(user.Id),
-            RefreshToken = _jwtHandler.CreateRefreshToken(user.Id)
+            RefreshToken = _jwtHandler.CreateRefreshToken()
         };
     }
 }

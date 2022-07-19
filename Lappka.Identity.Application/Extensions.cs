@@ -1,4 +1,5 @@
 using System.Text;
+using Convey;
 using Lappka.Identity.Application.Exceptions;
 using Lappka.Identity.Application.JWT;
 using Microsoft.AspNetCore.Authentication.JwtBearer;

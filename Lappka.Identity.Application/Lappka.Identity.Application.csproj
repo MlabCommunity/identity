@@ -23,8 +23,6 @@
 
     <ItemGroup>
       <Folder Include="Auth" />
-      <Folder Include="User\Commands\Handlers" />
-      <Folder Include="User\Queries\Handlers" />
     </ItemGroup>
 
 </Project>

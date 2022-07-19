@@ -1,4 +1,5 @@
 using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
 using Microsoft.Extensions.Options;
@@ -35,18 +36,18 @@ public class JwtHandler : IJwtHandler
     private void InitializeRsa()
     {
         RSA publicRsa = RSA.Create();
-        var publicKeyXml = File.ReadAllText(_settings.RsaPublicKeyXML);
-        publicRsa.FromXmlString(publicKeyXml);
+        var publicKeyXml = File.ReadAllText(_settings.RsaPublicKeyPath);
+        publicRsa.ImportFromPem(publicKeyXml);
         _issuerSigningKey = new RsaSecurityKey(publicRsa);
 
-        if (string.IsNullOrWhiteSpace(_settings.RsaPrivateKeyXML))
+        if (string.IsNullOrWhiteSpace(_settings.RsaPrivateKeyPath))
         {
             return;
         }
 
         RSA privateRsa = RSA.Create();
-        var privateKeyXml = File.ReadAllText(_settings.RsaPrivateKeyXML);
-        privateRsa.FromXmlString(privateKeyXml);
+        var privateKeyXml = File.ReadAllText(_settings.RsaPrivateKeyPath);
+        privateRsa.ImportFromPem(privateKeyXml);
         var privateKey = new RsaSecurityKey(privateRsa);
         _signingCredentials = new SigningCredentials(privateKey, SecurityAlgorithms.RsaSha256);
     }
@@ -62,21 +63,27 @@ public class JwtHandler : IJwtHandler
         _jwtHeader = new JwtHeader(_signingCredentials);
         Parameters = new TokenValidationParameters
         {
+            ClockSkew = TimeSpan.Zero,
+            ValidateLifetime = true,
             ValidateAudience = false,
             ValidIssuer = _settings.Issuer,
             IssuerSigningKey = _issuerSigningKey
         };
     }
-    
+
     public string CreateAccessToken(string userId)
     {
-        var nowUtc = DateTime.UtcNow;
-        var expires = nowUtc.AddMinutes(_settings.ExpiryMinutes);
-        var centuryBegin = new DateTime(1970, 1, 1);
-        var exp = (long)(new TimeSpan(expires.Ticks - centuryBegin.Ticks).TotalSeconds);
-        var now = (long)(new TimeSpan(nowUtc.Ticks - centuryBegin.Ticks).TotalSeconds);
+        var halo = DateTime.Now.AddMinutes(_settings.ExpiryMinutes); //tutaj
+
         var issuer = _settings.Issuer ?? string.Empty;
-        var payload = new JwtPayload
+
+        var claims = new List<Claim>()
+        {
+            new Claim(ClaimTypes.NameIdentifier, userId),
+        };
+
+        var x = new JwtSecurityToken(issuer, issuer, claims, expires: halo, signingCredentials: _signingCredentials);
+        /*var payload = new JwtPayload
         {
             { "sub", userId },
             { "unique_name", userId },
@@ -84,35 +91,18 @@ public class JwtHandler : IJwtHandler
             { "iat", now },
             { "nbf", now },
             { "exp", exp },
-            { "jti", Guid.NewGuid().ToString("N") }
         };
-        var jwt = new JwtSecurityToken(_jwtHeader, payload);
-        var token = _jwtSecurityTokenHandler.WriteToken(jwt);
+        */
+        var token = _jwtSecurityTokenHandler.WriteToken(x);
 
         return token;
     }
 
-    public string CreateRefreshToken(string userId)
+    public string CreateRefreshToken()
     {
-        var nowUtc = DateTime.UtcNow;
-        var expires = nowUtc.AddDays(_settings.ExpiryDays);
-        var centuryBegin = new DateTime(1970, 1, 1);
-        var exp = (long)(new TimeSpan(expires.Ticks - centuryBegin.Ticks).TotalSeconds);
-        var now = (long)(new TimeSpan(nowUtc.Ticks - centuryBegin.Ticks).TotalSeconds);
-        var issuer = _settings.Issuer ?? string.Empty;
-        var payload = new JwtPayload
-        {
-            { "sub", userId },
-            { "unique_name", userId },
-            { "iss", issuer },
-            { "iat", now },
-            { "nbf", now },
-            { "exp", exp },
-            { "jti", Guid.NewGuid().ToString("N") }
-        };
-        var jwt = new JwtSecurityToken(_jwtHeader, payload);
-        var token = _jwtSecurityTokenHandler.WriteToken(jwt);
-
-        return token;
+        var randomNumber = new byte[64];
+        using var rng = RandomNumberGenerator.Create();
+        rng.GetBytes(randomNumber);
+        return Convert.ToBase64String(randomNumber);
     }
 }

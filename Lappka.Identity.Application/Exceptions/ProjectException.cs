@@ -1,5 +1,7 @@
 using Lappka.Identity.Application.Exceptions;
 
+namespace Lappka.Identity.Application.Exceptions;
+
 public class ProjectException : Exception
 {
     public ProjectException(string message, int errorCode = 400) : base(message)
