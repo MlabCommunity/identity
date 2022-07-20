@@ -14,7 +14,7 @@ public class GetUserDataByIdQueryHandler : IQueryHandler<GetUserDataByIdQuery, G
 
     public async Task<GetUserDataQueryResult> HandleAsync(GetUserDataByIdQuery query, CancellationToken cancellationToken = new CancellationToken())
     {
-        var user = await _appUserRepository.GetFullUserById(query.UserId);
+        var user = await _appUserRepository.GetFullUserById(query.Id);
 
         var userData = new GetUserDataQueryResult(user.Id, user.UserName,
             user.UserExtended.FirstName, user.UserExtended.LastName,

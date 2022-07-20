@@ -24,7 +24,7 @@ namespace Lapka.Identity.Infrastructure.DataBase.Migrations
 
             modelBuilder.Entity("Lapka.Identity.Core.Domain.Entities.AppToken", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
                     b.Property<string>("LoginProvider")
@@ -39,7 +39,7 @@ namespace Lapka.Identity.Infrastructure.DataBase.Migrations
                     b.Property<string>("Value")
                         .HasColumnType("text");
 
-                    b.HasKey("UserId", "LoginProvider", "Name");
+                    b.HasKey("Id", "LoginProvider", "Name");
 
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
@@ -199,12 +199,12 @@ namespace Lapka.Identity.Infrastructure.DataBase.Migrations
                     b.Property<string>("ClaimValue")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
                     b.HasKey("Id");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("Id");
 
                     b.ToTable("AspNetUserClaims", (string)null);
                 });
@@ -220,25 +220,25 @@ namespace Lapka.Identity.Infrastructure.DataBase.Migrations
                     b.Property<string>("ProviderDisplayName")
                         .HasColumnType("text");
 
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
                     b.HasKey("LoginProvider", "ProviderKey");
 
-                    b.HasIndex("UserId");
+                    b.HasIndex("Id");
 
                     b.ToTable("AspNetUserLogins", (string)null);
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserRole<System.Guid>", b =>
                 {
-                    b.Property<Guid>("UserId")
+                    b.Property<Guid>("Id")
                         .HasColumnType("uuid");
 
                     b.Property<Guid>("RoleId")
                         .HasColumnType("uuid");
 
-                    b.HasKey("UserId", "RoleId");
+                    b.HasKey("Id", "RoleId");
 
                     b.HasIndex("RoleId");
 
@@ -249,7 +249,7 @@ namespace Lapka.Identity.Infrastructure.DataBase.Migrations
                 {
                     b.HasOne("Lapka.Identity.Core.Domain.Entities.AppUser", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -278,7 +278,7 @@ namespace Lapka.Identity.Infrastructure.DataBase.Migrations
                 {
                     b.HasOne("Lapka.Identity.Core.Domain.Entities.AppUser", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -287,7 +287,7 @@ namespace Lapka.Identity.Infrastructure.DataBase.Migrations
                 {
                     b.HasOne("Lapka.Identity.Core.Domain.Entities.AppUser", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
@@ -302,7 +302,7 @@ namespace Lapka.Identity.Infrastructure.DataBase.Migrations
 
                     b.HasOne("Lapka.Identity.Core.Domain.Entities.AppUser", null)
                         .WithMany()
-                        .HasForeignKey("UserId")
+                        .HasForeignKey("Id")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

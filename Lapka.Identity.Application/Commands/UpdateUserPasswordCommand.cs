@@ -2,4 +2,4 @@
 
 namespace Lapka.Identity.Application.Commands;
 
-public record UpdateUserPasswordCommand(string password) : ICommand;
+public record UpdateUserPasswordCommand(string Password) : ICommand;

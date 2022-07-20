@@ -2,4 +2,4 @@
 
 namespace Lapka.Identity.Application.Queries;
 
-public record GetUserDataByIdQuery(Guid UserId) : IQuery<GetUserDataQueryResult>;
+public record GetUserDataByIdQuery(Guid Id) : IQuery<GetUserDataQueryResult>;

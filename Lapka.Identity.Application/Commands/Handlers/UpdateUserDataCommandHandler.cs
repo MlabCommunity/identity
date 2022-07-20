@@ -38,8 +38,6 @@ internal class UpdateUserDataCommandHandler : ICommandHandler<UpdateUserDataComm
         if(command.LastName is not null)
             user.UserExtended.LastName = command.LastName;
 
-        user.UserExtended.ModifiedAt = DateTime.UtcNow;
-
         await _appUserRepository.UpdateUserData(user);
     }
 }

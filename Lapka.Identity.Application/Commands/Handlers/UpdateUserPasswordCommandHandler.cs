@@ -25,11 +25,9 @@ internal class UpdateUserPasswordCommandHandler : ICommandHandler<UpdateUserPass
         if (user is null)
             throw new UserNotFoundException();
 
-        var hashPassword = _signInManager.UserManager.PasswordHasher.HashPassword(user, command.password);
+        var hashPassword = _signInManager.UserManager.PasswordHasher.HashPassword(user, command.Password);
 
         user.PasswordHash = hashPassword;
-        user.UserExtended.ModifiedAt = DateTime.UtcNow;
-
         await _appUserRepository.UpdateUserData(user);
     }
 }

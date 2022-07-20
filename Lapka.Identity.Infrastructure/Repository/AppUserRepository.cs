@@ -8,7 +8,6 @@ namespace Lapka.Identity.Infrastructure.Repository;
 internal class AppUserRepository : IAppUserRepository
 {
     private readonly DataContext _context;
-    private readonly UserExtendedRepository _userExtendedRepository;
 
     public AppUserRepository(DataContext context)
     {
@@ -29,6 +28,11 @@ internal class AppUserRepository : IAppUserRepository
 
     public async Task UpdateUserData(AppUser user)
     {
+        if (user.UserExtended is not null)
+        {
+            user.UserExtended.ModifiedAt = DateTime.UtcNow;
+        }
+
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
     }

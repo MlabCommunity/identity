@@ -25,7 +25,6 @@ internal class UpdateUserEmailCommandHandler : ICommandHandler<UpdateUserEmailCo
             throw new EmailAlreadyExistException(command.Email);
 
         user.Email = command.Email;
-        user.UserExtended.ModifiedAt = DateTime.UtcNow;
 
         await _appUserRepository.UpdateUserData(user);
     }

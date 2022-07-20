@@ -1,5 +1,4 @@
 ﻿using Lapka.Identity.Application.Interfaces;
-using Lapka.Identity.Core.IRepository;
 using Lapka.Identity.Infrastructure.DataBase;
 using Lapka.Identity.Infrastructure.Exceptions;
 using Lapka.Identity.Infrastructure.JWT;
@@ -24,7 +23,6 @@ public static class InfrastuctureExtensions
     {
         services.AddHostedService<DbMigrator>();
         services.AddScoped<ExceptionMiddleware>();
-        services.AddScoped<IUserExtendedRepository, UserExtendedRepository>();
         services.AddScoped<IJwtGenerator, JwtGenerator>(); // singleton?
         services.AddScoped<IUserInfoProvider, UserInfoProvider>();
         services.AddScoped<IAppTokenRepository, AppTokenRepository>();

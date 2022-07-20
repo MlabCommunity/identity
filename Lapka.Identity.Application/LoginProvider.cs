@@ -3,6 +3,7 @@
 public enum LoginProvider
 {
     Lapka,
+    ResetPassword,
     Google,
     Facebook
 }
