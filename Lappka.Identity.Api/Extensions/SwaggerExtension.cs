@@ -1,3 +1,4 @@
+using System.Reflection;
 using Microsoft.OpenApi.Models;
 
 namespace Lappka.Identity.Api.Extensions;
@@ -31,18 +32,11 @@ public static class SwaggerExtension
                     new string[] { }
                 }
             });
+            c.EnableAnnotations();
         });
-
         //services.AddFluentValidationRulesToSwagger();
         services.AddEndpointsApiExplorer();
 
         return services;
-    }
-
-    public static IApplicationBuilder UseSwaggerDocs(this IApplicationBuilder app)
-    {
-        return app
-            .UseSwagger()
-            .UseSwaggerUI();
     }
 }

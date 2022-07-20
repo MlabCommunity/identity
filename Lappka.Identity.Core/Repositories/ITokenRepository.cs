@@ -4,8 +4,8 @@ namespace Lappka.Identity.Core.Repositories;
 
 public interface ITokenRepository
 {
-    Task AddRefreshToken(ApplicationToken appToken);
-    Task RemoveRefreshToken(ApplicationToken AppToken);
-    Task<ApplicationToken> GetRefreshTokenAsync(string token,string userId);
+    Task AddRefreshToken(AppToken appToken);
+    Task RemoveRefreshToken(AppToken AppToken);
+    Task<AppToken> GetRefreshTokenAsync(string token,string userId);
     
 }

@@ -1,7 +1,9 @@
 using Convey.CQRS.Queries;
 using Lappka.Identity.Application.Dto;
 using Lappka.Identity.Application.Exceptions.Res;
+using Lappka.Identity.Application.Services;
 using Lappka.Identity.Core.Entities;
+using Lappka.Identity.Core.Repositories;
 using Microsoft.AspNetCore.Identity;
 
 namespace Lappka.Identity.Application.User.Queries.Handlers;
@@ -9,16 +11,17 @@ namespace Lappka.Identity.Application.User.Queries.Handlers;
 public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery,UserDto>
 {
     
-    private readonly UserManager<ApplicationUser> _userManager;
-    
-    public GetUserByIdQueryHandler(UserManager<ApplicationUser> userManager)
-    {
-        _userManager = userManager;
-    }
+    private readonly AppUserManager _appUserManager;
 
+    public GetUserByIdQueryHandler(AppUserManager appUserManager)
+    {
+        _appUserManager = appUserManager;
+    }
+    
     public async Task<UserDto> HandleAsync(GetUserByIdQuery query, CancellationToken cancellationToken = new CancellationToken())
     {
-        var user = await _userManager.FindByIdAsync(query.UserId);
+        var user = await _appUserManager.FindByIdAsync(query.UserId);
+        
         
         if (user is null)
         {
@@ -29,6 +32,8 @@ public class GetUserByIdQueryHandler : IQueryHandler<GetUserByIdQuery,UserDto>
         {
             Id = user.Id,
             Email = user.Email,
+            Firstname = user.UserExtended.FirstName,
+            Lastname = user.UserExtended.LastName,
             PhoneNumber = user.PhoneNumber,
             UserName = user.UserName
         };

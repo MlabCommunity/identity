@@ -1,7 +1,8 @@
 using System.Security.Claims;
 using Convey.CQRS.Queries;
+using Lappka.Identity.Application.Dto;
 using Lappka.Identity.Application.Exceptions.Res;
-using Lappka.Identity.Application.JWT;
+using Lappka.Identity.Application.Services;
 using Lappka.Identity.Core.Entities;
 using Lappka.Identity.Core.Repositories;
 using Microsoft.AspNetCore.Identity;
@@ -9,23 +10,21 @@ using Microsoft.Extensions.Options;
 
 namespace Lappka.Identity.Application.Auth.Queries.Handlers;
 
-public class UseTokenQueryHandler : IQueryHandler<UseTokenQuery, TokensResponse>
+public class UseTokenQueryHandler : IQueryHandler<UseTokenQuery, TokensDto>
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly AppUserManager _userManager;
     private readonly IJwtHandler _jwtHandler;
     private readonly ITokenRepository _tokenRepository;
-    private readonly JwtSettings _jwtSettings;
-
-    public UseTokenQueryHandler(UserManager<ApplicationUser> userManager, ITokenRepository tokenRepository,IOptions<JwtSettings> jwtSettings,
+    
+    public UseTokenQueryHandler(AppUserManager userManager, ITokenRepository tokenRepository,
         IJwtHandler jwtHandler)
     {
-        _jwtSettings = jwtSettings.Value;
         _tokenRepository = tokenRepository;
         _userManager = userManager;
         _jwtHandler = jwtHandler;
     }
 
-    public async Task<TokensResponse> HandleAsync(UseTokenQuery query,
+    public async Task<TokensDto> HandleAsync(UseTokenQuery query,
         CancellationToken cancellationToken = new CancellationToken())
     {
         var decodedToken =_jwtHandler.DecodeToken(query.AccessToken);
@@ -45,13 +44,13 @@ public class UseTokenQueryHandler : IQueryHandler<UseTokenQuery, TokensResponse>
             throw new RefreshTokenNotFoundException();
         }
 
-        if (refreshToken.CreatedAt.AddDays(_jwtSettings.ExpiryDays) < DateTime.Now)
+        if (!_jwtHandler.IsExpired(refreshToken.CreatedAt))
         {
             await _tokenRepository.RemoveRefreshToken(refreshToken);
             throw new RefreshTokenExpiredException();
         }
 
-        return new TokensResponse
+        return new TokensDto
         {
             AccessToken = _jwtHandler.CreateAccessToken(user.Id),
             RefreshToken = refreshToken.Value

@@ -1,5 +1,6 @@
 using Convey.CQRS.Commands;
 using Lappka.Identity.Application.Exceptions.Res;
+using Lappka.Identity.Application.Services;
 using Lappka.Identity.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 
@@ -8,9 +9,9 @@ namespace Lappka.Identity.Application.User.Commands.Handlers;
 public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
 {
     
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly AppUserManager _userManager;
     
-    public UpdateUserCommandHandler(UserManager<ApplicationUser> userManager)
+    public UpdateUserCommandHandler(AppUserManager userManager)
     {
         _userManager = userManager;
     }
@@ -32,6 +33,8 @@ public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
         
         user.UserName = command.UserName;
         user.PhoneNumber = command.PhoneNumber;
+        user.UserExtended.FirstName = command.FirstName;
+        user.UserExtended.LastName= command.LastName;
 
         await _userManager.UpdateAsync(user);
     }

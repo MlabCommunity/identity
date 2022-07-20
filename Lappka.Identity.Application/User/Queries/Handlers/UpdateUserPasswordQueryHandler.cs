@@ -1,5 +1,6 @@
 using Convey.CQRS.Queries;
 using Lappka.Identity.Application.Exceptions.Res;
+using Lappka.Identity.Application.Services;
 using Lappka.Identity.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 
@@ -7,23 +8,23 @@ namespace Lappka.Identity.Application.User.Queries.Handlers;
 
 public class UpdateUserPasswordQueryHandler : IQueryHandler<UpdateUserPasswordQuery, string>
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly AppUserManager _appUserManager;
 
-    public UpdateUserPasswordQueryHandler(UserManager<ApplicationUser> userManager)
+    public UpdateUserPasswordQueryHandler(AppUserManager appUserManager)
     {
-        _userManager = userManager;
+        _appUserManager = appUserManager;
     }
 
     public async Task<string> HandleAsync(UpdateUserPasswordQuery query,
         CancellationToken cancellationToken = new CancellationToken())
     {
-        var user = await _userManager.FindByIdAsync(query.UserId);
+        var user = await _appUserManager.FindByIdAsync(query.UserId);
 
         if (user is null)
         {
             throw new UserNotFoundException();
         }
 
-        return await _userManager.GeneratePasswordResetTokenAsync(user);
+        return await _appUserManager.GeneratePasswordResetTokenAsync(user);
     }
 }

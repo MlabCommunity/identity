@@ -1,6 +1,6 @@
-namespace Lappka.Identity.Application.JWT;
+namespace Lappka.Identity.Application.Dto;
 
-public class TokensResponse
+public class TokensDto
 {
     public string RefreshToken { get; set; }
     public string AccessToken { get; set; }

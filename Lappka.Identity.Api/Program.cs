@@ -10,6 +10,8 @@ var builder = WebApplication.CreateBuilder(args);
 IConfiguration configuration = builder.Configuration;
 
 builder.Services.AddMiddleware();
+builder.Services.AddApplication();
+builder.Services.AddInfrastructure(configuration);
 builder.Services.AddControllers();
 builder.Services.AddCredentialsConfig();
     
@@ -20,7 +22,6 @@ builder.Services.AddConvey()
     .AddInMemoryQueryDispatcher()
     .Build();
 
-builder.Services.AddInfrastructure(configuration);
 builder.Services.AddAuth(configuration);
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerA();

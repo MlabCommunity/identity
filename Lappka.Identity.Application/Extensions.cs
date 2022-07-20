@@ -1,4 +1,5 @@
 using Lappka.Identity.Application.Exceptions;
+using Lappka.Identity.Application.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
@@ -36,6 +37,13 @@ public static class Extensions
                 "abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789-._@+";
             options.User.RequireUniqueEmail = true;
         });
+        return services;
+    }
+    
+    public static IServiceCollection AddApplication(this IServiceCollection services)
+    {
+        services.AddScoped<AppSignInManager>();
+        services.AddScoped<AppUserManager>();
         return services;
     }
     
