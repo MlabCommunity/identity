@@ -2,10 +2,11 @@ using System.IdentityModel.Tokens.Jwt;
 using System.Security.Claims;
 using System.Security.Cryptography;
 using System.Text;
+using Lappka.Identity.Application.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Lappka.Identity.Application.JWT;
+namespace Lappka.Identity.Infrastructure.JWT;
 
 public class JwtHandler : IJwtHandler
 {
@@ -71,6 +72,16 @@ public class JwtHandler : IJwtHandler
     public JwtSecurityToken DecodeToken(string token)
     {
         return _jwtSecurityTokenHandler.ReadJwtToken(token);
+    }
+
+    public bool IsExpired(DateTime dateTime)
+    {
+        if (dateTime.AddDays(_settings.ExpiryDays) < DateTime.UtcNow)
+        {
+            return false;
+        }
+
+        return true;
     }
 
     public string CreateAccessToken(string userId)

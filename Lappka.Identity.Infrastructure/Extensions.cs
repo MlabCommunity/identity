@@ -1,3 +1,5 @@
+using Lappka.Identity.Application.Services;
+using Lappka.Identity.Infrastructure.Context;
 using Lappka.Identity.Infrastructure.Postgres;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -10,6 +12,8 @@ public static class Extensions
     {
         services.AddPostgres(configuration);
         services.AddHostedService<DbMigrator>();
+        services.AddScoped<AppSignInManager>();
+        services.AddScoped<AppUserManager>();
         return services;
     }
 }

@@ -3,6 +3,7 @@ using System;
 using Lappka.Identity.Infrastructure.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
@@ -11,9 +12,10 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace Lappka.Identity.Infrastructure.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20220719125337_UserExtensionProperties_Added")]
+    partial class UserExtensionProperties_Added
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -22,7 +24,7 @@ namespace Lappka.Identity.Infrastructure.Migrations
 
             NpgsqlModelBuilderExtensions.UseIdentityByDefaultColumns(modelBuilder);
 
-            modelBuilder.Entity("Lappka.Identity.Core.Entities.AppToken", b =>
+            modelBuilder.Entity("Lappka.Identity.Core.Entities.ApplicationToken", b =>
                 {
                     b.Property<string>("UserId")
                         .HasColumnType("text");
@@ -44,7 +46,7 @@ namespace Lappka.Identity.Infrastructure.Migrations
                     b.ToTable("AspNetUserTokens", (string)null);
                 });
 
-            modelBuilder.Entity("Lappka.Identity.Core.Entities.AppUser", b =>
+            modelBuilder.Entity("Lappka.Identity.Core.Entities.ApplicationUser", b =>
                 {
                     b.Property<string>("Id")
                         .HasColumnType("text");
@@ -239,9 +241,9 @@ namespace Lappka.Identity.Infrastructure.Migrations
                     b.ToTable("AspNetUserRoles", (string)null);
                 });
 
-            modelBuilder.Entity("Lappka.Identity.Core.Entities.AppToken", b =>
+            modelBuilder.Entity("Lappka.Identity.Core.Entities.ApplicationToken", b =>
                 {
-                    b.HasOne("Lappka.Identity.Core.Entities.AppUser", null)
+                    b.HasOne("Lappka.Identity.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -250,7 +252,7 @@ namespace Lappka.Identity.Infrastructure.Migrations
 
             modelBuilder.Entity("Lappka.Identity.Core.Entities.UserExtended", b =>
                 {
-                    b.HasOne("Lappka.Identity.Core.Entities.AppUser", "User")
+                    b.HasOne("Lappka.Identity.Core.Entities.ApplicationUser", "User")
                         .WithOne("UserExtended")
                         .HasForeignKey("Lappka.Identity.Core.Entities.UserExtended", "Id")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -270,7 +272,7 @@ namespace Lappka.Identity.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserClaim<string>", b =>
                 {
-                    b.HasOne("Lappka.Identity.Core.Entities.AppUser", null)
+                    b.HasOne("Lappka.Identity.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -279,7 +281,7 @@ namespace Lappka.Identity.Infrastructure.Migrations
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityUserLogin<string>", b =>
                 {
-                    b.HasOne("Lappka.Identity.Core.Entities.AppUser", null)
+                    b.HasOne("Lappka.Identity.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
@@ -294,14 +296,14 @@ namespace Lappka.Identity.Infrastructure.Migrations
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
 
-                    b.HasOne("Lappka.Identity.Core.Entities.AppUser", null)
+                    b.HasOne("Lappka.Identity.Core.Entities.ApplicationUser", null)
                         .WithMany()
                         .HasForeignKey("UserId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });
 
-            modelBuilder.Entity("Lappka.Identity.Core.Entities.AppUser", b =>
+            modelBuilder.Entity("Lappka.Identity.Core.Entities.ApplicationUser", b =>
                 {
                     b.Navigation("UserExtended")
                         .IsRequired();

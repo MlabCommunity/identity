@@ -1,20 +1,21 @@
 using Convey.CQRS.Commands;
 using Lappka.Identity.Application.Exceptions.Res;
+using Lappka.Identity.Application.Services;
 using Lappka.Identity.Core.Entities;
 using Microsoft.AspNetCore.Identity;
 
 namespace Lappka.Identity.Application.User.Commands.Handlers;
 
-public class UpdateUserPasswordCommandHandler : ICommandHandler<ConfirmUpdateUserPasswordCommand>
+public class ConfirmUserPasswordCommandHandler : ICommandHandler<ConfirmUserPasswordCommand>
 {
-    private readonly UserManager<ApplicationUser> _userManager;
+    private readonly AppUserManager _appUserManager;
     
-    public UpdateUserPasswordCommandHandler(UserManager<ApplicationUser> userManager)
+    public ConfirmUserPasswordCommandHandler(AppUserManager appUserManager)
     {
-        _userManager = userManager;
+        _appUserManager = appUserManager;
     }
 
-    public async Task HandleAsync(ConfirmUpdateUserPasswordCommand command,
+    public async Task HandleAsync(ConfirmUserPasswordCommand command,
         CancellationToken cancellationToken = new CancellationToken())
     {
         if (command.UserId is null)
@@ -22,7 +23,7 @@ public class UpdateUserPasswordCommandHandler : ICommandHandler<ConfirmUpdateUse
             throw new UserNotFoundException();
         }
 
-        var user = await _userManager.FindByIdAsync(command.UserId);
+        var user = await _appUserManager.FindByIdAsync(command.UserId);
 
         if (!command.Password.Equals(command.ConfirmationToken))
         {
@@ -34,6 +35,6 @@ public class UpdateUserPasswordCommandHandler : ICommandHandler<ConfirmUpdateUse
             throw new UserNotFoundException();
         }
 
-        await _userManager.ResetPasswordAsync(user, command.ConfirmationToken, command.ConfirmPassword);
+        await _appUserManager.ResetPasswordAsync(user, command.ConfirmationToken, command.ConfirmPassword);
     }
 }
