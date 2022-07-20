@@ -20,7 +20,7 @@ public class RegistrationCommandHandler : ICommandHandler<RegistrationCommand>
         var user = new AppUser
         {
             Id = userId,
-            UserName = command.UserName,
+            UserName = command.Username,
             Email = command.EmailAddress,
             UserExtended = new UserExtended(userId, command.FirstName, command.LastName)
         };

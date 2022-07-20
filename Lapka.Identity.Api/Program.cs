@@ -16,7 +16,12 @@ builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(c =>
         c.SignIn.RequireConfirmedEmail = false;
         c.User.RequireUniqueEmail = true;
     })
-.AddEntityFrameworkStores<DataContext>();
+.AddEntityFrameworkStores<DataContext>()
+.AddDefaultTokenProviders();
+
+builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
+    opt.TokenLifespan = TimeSpan.FromHours(1));
+
 
 var connectionString = builder.Configuration.GetConnectionString("postgres");
 builder.Services.AddDbContext<DataContext>(x => x.UseNpgsql(connectionString));

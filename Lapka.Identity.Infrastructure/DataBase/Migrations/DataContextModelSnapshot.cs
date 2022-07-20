@@ -57,7 +57,7 @@ namespace Lapka.Identity.Infrastructure.DataBase.Migrations
                         .IsConcurrencyToken()
                         .HasColumnType("text");
 
-                    b.Property<string>("Email")
+                    b.Property<string>("Password")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 
@@ -93,7 +93,7 @@ namespace Lapka.Identity.Infrastructure.DataBase.Migrations
                     b.Property<bool>("TwoFactorEnabled")
                         .HasColumnType("boolean");
 
-                    b.Property<string>("UserName")
+                    b.Property<string>("Username")
                         .HasMaxLength(256)
                         .HasColumnType("character varying(256)");
 

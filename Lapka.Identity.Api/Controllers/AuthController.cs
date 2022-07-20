@@ -2,6 +2,8 @@
 using Convey.CQRS.Queries;
 using Lapka.Identity.Application.Commands;
 using Lapka.Identity.Application.Queries;
+using Lapka.Identity.Application.RequestWithValidation;
+using Lapka.Identity.Application.Validation.RequestWithValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -26,8 +28,11 @@ public class AuthController : Controller
     [SwaggerResponse(200)]
     [SwaggerResponse(400)]
     [SwaggerResponse(500)]
-    public async Task<IActionResult> Register([FromBody] RegistrationCommand command)
+    public async Task<IActionResult> Register([FromBody] RegistrationRequest request)
     {
+        var command = new RegistrationCommand(request.Username, request.FirstName, request.LastName,
+            request.EmailAddress, request.Password);
+
         await _commandDispatcher.SendAsync(command);
         return NoContent();
     }
@@ -37,8 +42,9 @@ public class AuthController : Controller
     [SwaggerResponse(204, Type = typeof(LoginResult))]
     [SwaggerResponse(400)]
     [SwaggerResponse(500)]
-    public async Task<IActionResult> Login([FromBody] LoginQuery query)
+    public async Task<IActionResult> Login([FromBody] LoginRequest request)
     {
+        var query = new LoginQuery(request.Email, request.Password);
         var tokens = await _queryDispatcher.QueryAsync(query);
         return Ok(tokens);
     }
@@ -48,8 +54,9 @@ public class AuthController : Controller
     [SwaggerResponse(204, Type = typeof(UseRefreshTokenResult))]
     [SwaggerResponse(400)]
     [SwaggerResponse(500)]
-    public async Task<IActionResult> UseRefreshToken([FromBody] UseRefreshTokenQuery query)
+    public async Task<IActionResult> UseRefreshToken([FromBody] UseRefreshTokenRequest request)
     {
+        var query = new UseRefreshTokenQuery(request.AccessToken, request.RefreshToken);
         var token = await _queryDispatcher.QueryAsync(query);
         return Ok(token);
     }
@@ -60,8 +67,33 @@ public class AuthController : Controller
     [SwaggerResponse(200)]
     [SwaggerResponse(400)]
     [SwaggerResponse(500)]
-    public async Task<IActionResult> RevokeRefreshToken([FromBody] RevokeRefreshTokenCommand command)
+    public async Task<IActionResult> RevokeRefreshToken([FromBody] TokenRequest request)
     {
+        var command = new RevokeRefreshTokenCommand(request.Token);
+        await _commandDispatcher.SendAsync(command);
+        return NoContent();
+    }
+
+    [HttpPost("resetPassword")]
+    [SwaggerOperation(description: "Wysłanie maila z linkiem do zmiany hasła.")]
+    [SwaggerResponse(200)]
+    [SwaggerResponse(400)]
+    [SwaggerResponse(500)]
+    public async Task<IActionResult> ResetPassword([FromBody] UserEmailRequest request)
+    {
+        var command = new ResetPasswordCommand(request.Email);
+        await _commandDispatcher.SendAsync(command);
+        return NoContent();
+    }
+
+    [HttpPost("setNewPassword/{token}")]
+    [SwaggerOperation(description: "Ustawienie nowego hasła.")]
+    [SwaggerResponse(200)]
+    [SwaggerResponse(400)]
+    [SwaggerResponse(500)]
+    public async Task<IActionResult> SetNewPassword([FromRoute] string token, [FromBody] SetNewPasswordRequest request)
+    {
+        var command = new SetNewPasswordCommand(token, request.Password, request.Email);
         await _commandDispatcher.SendAsync(command);
         return NoContent();
     }

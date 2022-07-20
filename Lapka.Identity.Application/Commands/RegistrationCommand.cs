@@ -2,4 +2,4 @@
 
 namespace Lapka.Identity.Application.Commands;
 
-public record RegistrationCommand(string UserName, string FirstName, string LastName, string EmailAddress, string Password) : ICommand;
+public record RegistrationCommand(string Username, string FirstName, string LastName, string EmailAddress, string Password) : ICommand;
