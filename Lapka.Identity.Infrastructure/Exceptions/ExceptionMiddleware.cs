@@ -1,5 +1,6 @@
 ﻿using System.Text.Json;
 using FluentValidation;
+using Lapka.Identity.Application.Exceptions;
 using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.Logging;
 
@@ -28,7 +29,7 @@ public sealed class ExceptionMiddleware : IMiddleware
             context.Response.StatusCode = errorCode;
             context.Response.Headers.Add("content-type", "application/json");
 
-            var json = JsonSerializer.Serialize(new { ErrorCode = errorCode, pex.Message });
+            var json = JsonSerializer.Serialize(new { ErrorCode = errorCode, pex.Message, Errors = pex.ExceptionData });
             await context.Response.WriteAsync(json);
         }
         catch (ValidationException vex)

@@ -1,9 +1,8 @@
-﻿using System.Security.Authentication;
-using Convey.CQRS.Queries;
+﻿using Convey.CQRS.Queries;
+using Lapka.Identity.Application.Exceptions.UserExceptions;
 using Lapka.Identity.Application.Interfaces;
 using Lapka.Identity.Core.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Configuration;
 
 namespace Lapka.Identity.Application.Queries.Handlers;
 
@@ -13,7 +12,7 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, LoginResult>
     private readonly IJwtGenerator _jwtGenerator;
     private readonly IAppTokenRepository _appTokenRepository;
 
-    public LoginQueryHandler(IConfiguration config, SignInManager<AppUser> signInManager, IJwtGenerator jwtGenerator, IAppTokenRepository appTokenRepository)
+    public LoginQueryHandler(SignInManager<AppUser> signInManager, IJwtGenerator jwtGenerator, IAppTokenRepository appTokenRepository)
     {
         _signInManager = signInManager;
         _jwtGenerator = jwtGenerator;
@@ -25,13 +24,13 @@ internal class LoginQueryHandler : IQueryHandler<LoginQuery, LoginResult>
         var user = await _signInManager.UserManager.FindByEmailAsync(query.EmailAddress);
         if (user is null)
         {
-            throw new AuthenticationException("User doesn't exist.");
+            throw new InvalidLoginDataException();
         }
 
         var result = await _signInManager.CheckPasswordSignInAsync(user, query.Password, false);
         if (!result.Succeeded)
         {
-            throw new AuthenticationException("Invalid Password.");
+            throw new InvalidLoginDataException();
         }
 
         var accessToken = await _jwtGenerator.GenerateAccessToken(user);

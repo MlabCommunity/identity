@@ -2,4 +2,4 @@
 
 namespace Lapka.Identity.Application.Commands;
 
-public record UpdateUserEmailCommand(string email) : ICommand;
+public record UpdateUserEmailCommand(string Email) : ICommand;

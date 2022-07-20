@@ -1,5 +1,5 @@
-﻿using System.IdentityModel.Tokens.Jwt;
-using Convey.CQRS.Commands;
+﻿using Convey.CQRS.Commands;
+using Lapka.Identity.Application.Exceptions.UserExceptions;
 using Lapka.Identity.Application.Interfaces;
 
 namespace Lapka.Identity.Application.Commands.Handlers;
@@ -21,7 +21,7 @@ public class RevokeRefreshTokenCommandHandler : ICommandHandler<RevokeRefreshTok
 
         if(id is null)
         {
-            throw new Exception("Incorrect data");
+            throw new UserNotFoundException();
         }
 
         await _appTokenRepository.RemoveRefreshTokenByData((Guid)id, command.RefreshToken);

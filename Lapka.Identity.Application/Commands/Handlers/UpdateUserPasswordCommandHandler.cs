@@ -1,4 +1,5 @@
 ﻿using Convey.CQRS.Commands;
+using Lapka.Identity.Application.Exceptions.UserExceptions;
 using Lapka.Identity.Application.Interfaces;
 using Lapka.Identity.Core.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -22,7 +23,7 @@ internal class UpdateUserPasswordCommandHandler : ICommandHandler<UpdateUserPass
     {
         var user = await _userInfoProvider.GetCurrentUser();
         if (user is null)
-            throw new Exception("User isn't logged");
+            throw new UserNotFoundException();
 
         var hashPassword = _signInManager.UserManager.PasswordHasher.HashPassword(user, command.password);
 

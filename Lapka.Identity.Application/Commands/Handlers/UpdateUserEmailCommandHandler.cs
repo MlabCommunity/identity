@@ -1,4 +1,5 @@
 ﻿using Convey.CQRS.Commands;
+using Lapka.Identity.Application.Exceptions.UserExceptions;
 using Lapka.Identity.Application.Interfaces;
 
 namespace Lapka.Identity.Application.Commands.Handlers;
@@ -18,12 +19,12 @@ internal class UpdateUserEmailCommandHandler : ICommandHandler<UpdateUserEmailCo
     {
         var user = await _userInfoProvider.GetCurrentUser();
         if (user is null)
-            throw new Exception("User is not logged in");
+            throw new UserNotFoundException();
 
-        if (!_appUserRepository.CheckUsernameEmail(command.email))
-            throw new Exception("Email is already taken.");
+        if (!_appUserRepository.CheckUsernameEmail(command.Email))
+            throw new EmailAlreadyExistException(command.Email);
 
-        user.Email = command.email;
+        user.Email = command.Email;
         user.UserExtended.ModifiedAt = DateTime.UtcNow;
 
         await _appUserRepository.UpdateUserData(user);

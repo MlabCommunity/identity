@@ -1,4 +1,5 @@
 ﻿using Convey.CQRS.Queries;
+using Lapka.Identity.Application.Exceptions.UserExceptions;
 using Lapka.Identity.Application.Interfaces;
 using Lapka.Identity.Core.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
@@ -18,6 +19,8 @@ internal class GetUserDataQueryHandler : IQueryHandler<GetUserDataQuery, GetUser
     public async Task<GetUserDataQueryResult> HandleAsync(GetUserDataQuery query, CancellationToken cancellationToken = new CancellationToken())
     {
         var user = await _userInfoProvider.GetCurrentUser();
+        if (user is null)
+            throw new UserNotFoundException();
 
         var userData = new GetUserDataQueryResult(user.Id, user.UserName,   //consider: add auto mapper?
             user.UserExtended.FirstName, user.UserExtended.LastName,

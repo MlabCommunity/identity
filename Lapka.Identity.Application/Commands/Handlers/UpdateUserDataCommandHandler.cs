@@ -1,6 +1,6 @@
 ﻿using Convey.CQRS.Commands;
+using Lapka.Identity.Application.Exceptions.UserExceptions;
 using Lapka.Identity.Application.Interfaces;
-using Lapka.Identity.Core.IRepository;
 
 namespace Lapka.Identity.Application.Commands.Handlers;
 
@@ -19,17 +19,24 @@ internal class UpdateUserDataCommandHandler : ICommandHandler<UpdateUserDataComm
     {
         var user = await _userInfoProvider.GetCurrentUser();
 
-        if (command.username is not null && _appUserRepository.CheckUsernameAvailability(command.username))
+        if(command.Username is not null)
         {
-            user.UserName = command.username;
-            user.NormalizedUserName = command.username.ToUpper();
+            if (_appUserRepository.CheckUsernameAvailability(command.Username))
+            {
+                user.UserName = command.Username;
+                user.NormalizedUserName = command.Username.ToUpper();
+            }
+            else
+            {
+                throw new UsernameAlreadyExistException(command.Username);
+            }
         }
         
-        if(command.firstName is not null)
-            user.UserExtended.FirstName = command.firstName;
+        if(command.FirstName is not null)
+            user.UserExtended.FirstName = command.FirstName;
 
-        if(command.lastName is not null)
-            user.UserExtended.LastName = command.lastName;
+        if(command.LastName is not null)
+            user.UserExtended.LastName = command.LastName;
 
         user.UserExtended.ModifiedAt = DateTime.UtcNow;
 

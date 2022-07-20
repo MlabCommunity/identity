@@ -1,4 +1,5 @@
 ﻿using Convey.CQRS.Commands;
+using Lapka.Identity.Application.Exceptions.UserExceptions;
 using Lapka.Identity.Core.Domain.Entities;
 using Lapka.Identity.Core.IRepository;
 using Microsoft.AspNetCore.Identity;
@@ -27,8 +28,7 @@ public class RegistrationCommandHandler : ICommandHandler<RegistrationCommand>
 
         if (!result.Succeeded)
         {
-            var err = result.Errors.Aggregate("", (current, e) => current + e.Description + Environment.NewLine);
-            throw new Exception(err);
+            throw new InvalidRegisterDataException(result.Errors);
         }
 
         await _userExtendedRepository.CreateUserExtended(user.Id, command.FirstName, command.LastName);

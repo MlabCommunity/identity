@@ -23,7 +23,7 @@ public class DataContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid,
 
     protected override void OnModelCreating(ModelBuilder builder)
     {
-        //builder.ApplyConfigurationsFromAssembly(Assembly.GetExecutingAssembly());
+        //builder.HasDefaultSchema("identity");
         builder.ApplyConfigurationsFromAssembly(typeof(UserExtendedConfiguration).Assembly);
         base.OnModelCreating(builder);
     }
