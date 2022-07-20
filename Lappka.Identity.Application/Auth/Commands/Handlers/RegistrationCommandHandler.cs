@@ -2,8 +2,6 @@ using Convey.CQRS.Commands;
 using Lappka.Identity.Application.Exceptions.Res;
 using Lappka.Identity.Application.Services;
 using Lappka.Identity.Core.Entities;
-using Lappka.Identity.Core.Repositories;
-using Microsoft.AspNetCore.Identity;
 
 namespace Lappka.Identity.Application.Auth.Commands.Handlers;
 
@@ -30,12 +28,7 @@ public class RegistrationCommandHandler : ICommandHandler<RegistrationCommand>
         
         if (!result.Succeeded)
         {
-            string errors = "";
-            foreach (var error in result.Errors)
-            {
-                errors += error.Description;
-            }
-            throw new UnableToRegisterUser(errors);
+            throw new UnableToRegisterUser(result.Errors.ToArray());
         }
     }
 }

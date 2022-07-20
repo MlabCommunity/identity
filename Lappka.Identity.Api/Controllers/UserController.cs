@@ -89,7 +89,7 @@ public class UserController : ControllerBase
             Email = request.Email,
             ConfirmationToken = request.ConfirmationToken,
             Password = request.Password,
-            ConfirmPassword = request.ConfiremedPassword
+            ConfirmPassword = request.ConfirmedPassword
         };
 
         await _commandDispatcher.SendAsync(command);

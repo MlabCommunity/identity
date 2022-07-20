@@ -32,7 +32,7 @@ public class AuthController : ControllerBase
         var command = new RegistrationCommand()
         {
             Email = request.Email,
-            Username = request.Username,
+            Username = request.UserName,
             FirstName = request.FirstName,
             LastName = request.LastName,
             Password = request.Password,

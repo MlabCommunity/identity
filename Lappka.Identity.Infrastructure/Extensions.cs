@@ -1,5 +1,4 @@
 using Lappka.Identity.Application.Services;
-using Lappka.Identity.Infrastructure.Context;
 using Lappka.Identity.Infrastructure.Postgres;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;

@@ -1,8 +1,6 @@
 using Convey.CQRS.Commands;
 using Lappka.Identity.Application.Exceptions.Res;
 using Lappka.Identity.Application.Services;
-using Lappka.Identity.Core.Entities;
-using Microsoft.AspNetCore.Identity;
 
 namespace Lappka.Identity.Application.User.Commands.Handlers;
 

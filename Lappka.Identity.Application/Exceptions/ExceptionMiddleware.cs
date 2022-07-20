@@ -13,11 +13,11 @@ internal sealed class ExceptionMiddleware : IMiddleware
         }
         catch (ProjectException ex)
         {
+
             context.Response.StatusCode = ex._errorCode;
             context.Response.Headers.Add("content-type", "application/json");
-
-            var errorCode = ex._errorCode;
-            var json = JsonSerializer.Serialize(new { ErrorCode = errorCode, ex.Message });
+            
+            var json = JsonSerializer.Serialize(new {ErrorCode = ex._errorCode, ex.Message,Errors=ex.ExceptionData});
             await context.Response.WriteAsync(json);
         }
     }

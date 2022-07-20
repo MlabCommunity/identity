@@ -3,10 +3,7 @@ using Convey.CQRS.Queries;
 using Lappka.Identity.Application.Dto;
 using Lappka.Identity.Application.Exceptions.Res;
 using Lappka.Identity.Application.Services;
-using Lappka.Identity.Core.Entities;
 using Lappka.Identity.Core.Repositories;
-using Microsoft.AspNetCore.Identity;
-using Microsoft.Extensions.Options;
 
 namespace Lappka.Identity.Application.Auth.Queries.Handlers;
 

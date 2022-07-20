@@ -7,6 +7,5 @@ public interface IAppDbContext
 {
      DbSet<UserExtended> UsersExtended { get; set; }
      DbSet<AppToken> Tokens { get; set; }
-     
      Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }
