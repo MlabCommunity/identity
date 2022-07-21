@@ -1,6 +1,6 @@
-﻿using Lapka.Identity.Application;
-using Lapka.Identity.Application.Interfaces;
+﻿using Lapka.Identity.Core.Domain;
 using Lapka.Identity.Core.Domain.Entities;
+using Lapka.Identity.Core.IRepository;
 using Lapka.Identity.Infrastructure.DataBase;
 using Microsoft.EntityFrameworkCore;
 
@@ -32,13 +32,6 @@ internal class AppTokenRepository : IAppTokenRepository
     public async Task RemoveRefreshToken(AppToken appToken)
     {
         _context.UserTokens.Remove(appToken);
-        await _context.SaveChangesAsync();
-    }
-
-    public async Task RemoveRefreshTokenByData(Guid userGuid, string value, LoginProvider loginProvider)
-    {
-        var tokenObject = await this.GetRefreshToken(userGuid, value,  loginProvider);
-        _context.UserTokens.Remove(tokenObject);
         await _context.SaveChangesAsync();
     }
 

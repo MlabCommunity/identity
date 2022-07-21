@@ -1,4 +1,7 @@
+using System.Reflection;
+using FluentValidation.AspNetCore;
 using Lapka.Identity.Api.Extensions;
+using Lapka.Identity.Api.Helpers;
 using Lapka.Identity.Application;
 using Lapka.Identity.Core.Domain.Entities;
 using Lapka.Identity.Infrastructure;
@@ -9,6 +12,7 @@ using Microsoft.EntityFrameworkCore;
 var builder = WebApplication.CreateBuilder(args);
 
 builder.Services.AddControllers();
+builder.Services.AddScoped<IUserInfoProvider, UserInfoProvider>();
 
 builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(c =>
     {
@@ -34,6 +38,11 @@ builder.Services.AddAuth(builder.Configuration);
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerA();
+
+builder.Services.AddControllers().AddFluentValidation(opt =>
+{
+    opt.RegisterValidatorsFromAssembly(Assembly.GetExecutingAssembly());
+});
 
 var app = builder.Build();
 

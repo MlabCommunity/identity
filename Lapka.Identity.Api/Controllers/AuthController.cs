@@ -1,9 +1,8 @@
 ﻿using Convey.CQRS.Commands;
 using Convey.CQRS.Queries;
+using Lapka.Identity.Api.Helpers;
+using Lapka.Identity.Api.RequestWithValidation;
 using Lapka.Identity.Application.Commands;
-using Lapka.Identity.Application.Queries;
-using Lapka.Identity.Application.RequestWithValidation;
-using Lapka.Identity.Application.Validation.RequestWithValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -12,12 +11,12 @@ namespace Lapka.Identity.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class AuthController : Controller
+public class AuthController : BaseController
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;
 
-    public AuthController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
+    public AuthController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher, IUserInfoProvider userInfoProvider) : base(userInfoProvider)
     {
         _commandDispatcher = commandDispatcher;
         _queryDispatcher = queryDispatcher;
@@ -66,10 +65,11 @@ public class AuthController : Controller
     [SwaggerOperation(description: "Usuwa refresh token z bazy")]
     [SwaggerResponse(200)]
     [SwaggerResponse(400)]
+    [SwaggerResponse(401)]
     [SwaggerResponse(500)]
     public async Task<IActionResult> RevokeRefreshToken([FromBody] TokenRequest request)
     {
-        var command = new RevokeRefreshTokenCommand(request.Token);
+        var command = new RevokeRefreshTokenCommand(GetUserId(), request.Token);
         await _commandDispatcher.SendAsync(command);
         return NoContent();
     }

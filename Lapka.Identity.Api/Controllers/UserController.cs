@@ -1,10 +1,9 @@
 ﻿using Convey.CQRS.Commands;
 using Convey.CQRS.Queries;
+using Lapka.Identity.Api.Helpers;
+using Lapka.Identity.Api.RequestWithValidation;
 using Lapka.Identity.Application.Commands;
-using Lapka.Identity.Application.Interfaces;
 using Lapka.Identity.Application.Queries;
-using Lapka.Identity.Application.RequestWithValidation;
-using Lapka.Identity.Application.Validation.RequestWithValidation;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -13,12 +12,12 @@ namespace Lapka.Identity.Api.Controllers;
 
 [ApiController]
 [Route("[controller]")]
-public class UserController : Controller
+public class UserController : BaseController
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;
 
-    public UserController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
+    public UserController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher, IUserInfoProvider userInfoProvider) : base(userInfoProvider)
     {
         _commandDispatcher = commandDispatcher;
         _queryDispatcher = queryDispatcher;
@@ -29,10 +28,11 @@ public class UserController : Controller
     [SwaggerOperation(description: "Informacje o zalogowanym użytkowniku.")]
     [SwaggerResponse(204, Type = typeof(GetUserDataQueryResult))]
     [SwaggerResponse(400)]
+    [SwaggerResponse(401)]
     [SwaggerResponse(500)]
     public async Task<IActionResult> GetUser()
     {
-        var query = new GetUserDataQuery();
+        var query = new GetUserDataQuery(GetUserId());
         var userData = await _queryDispatcher.QueryAsync(query);
         return Ok(userData);
     }
@@ -42,6 +42,7 @@ public class UserController : Controller
     [SwaggerOperation(description: "Informacje o użytkowniku o podanym id.")]
     [SwaggerResponse(204, Type = typeof(GetUserDataQueryResult))]
     [SwaggerResponse(400)]
+    [SwaggerResponse(401)]
     [SwaggerResponse(500)]
     public async Task<IActionResult> GetUserById([FromRoute] Guid id)
     {
@@ -55,10 +56,11 @@ public class UserController : Controller
     [SwaggerOperation(description: "Aktualizuj Informacje o zalogowanym użytkowniku.")]
     [SwaggerResponse(200)]
     [SwaggerResponse(400)]
+    [SwaggerResponse(401)]
     [SwaggerResponse(500)]
     public async Task<IActionResult> UpdateUserData([FromBody] UpdateUserDataRequest request)
     {
-        var command = new UpdateUserDataCommand(request.Username, request.FirstName, request.LastName);
+        var command = new UpdateUserDataCommand(GetUserId(), request.Username, request.FirstName, request.LastName);
         await _commandDispatcher.SendAsync(command);
         return NoContent();
     }
@@ -68,10 +70,11 @@ public class UserController : Controller
     [SwaggerOperation(description: "Aktualizuj hasło zalogowanego użytkownika.")]
     [SwaggerResponse(200)]
     [SwaggerResponse(400)]
+    [SwaggerResponse(401)]
     [SwaggerResponse(500)]
     public async Task<IActionResult> UpdateUserPassword([FromBody] UserPasswordRequest request)
     {
-        var command = new UpdateUserPasswordCommand(request.Password);
+        var command = new UpdateUserPasswordCommand(GetUserId(), request.Password);
         await _commandDispatcher.SendAsync(command);
         return NoContent();
     }
@@ -81,10 +84,11 @@ public class UserController : Controller
     [SwaggerOperation(description: "Aktualizuj email zalogowanego użytkownika.")]
     [SwaggerResponse(200)]
     [SwaggerResponse(400)]
+    [SwaggerResponse(401)]
     [SwaggerResponse(500)]
     public async Task<IActionResult> UpdateUserEmail([FromBody] UpdateUserEmailRequest request)
     {
-        var command = new UpdateUserEmailCommand(request.Email);
+        var command = new UpdateUserEmailCommand(GetUserId(), request.Email);
         await _commandDispatcher.SendAsync(command);
         return NoContent();
     }

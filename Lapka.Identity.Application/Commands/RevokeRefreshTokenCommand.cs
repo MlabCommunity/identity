@@ -2,4 +2,4 @@
 
 namespace Lapka.Identity.Application.Commands;
 
-public record RevokeRefreshTokenCommand(string RefreshToken) : ICommand;
+public record RevokeRefreshTokenCommand(Guid UserId, string RefreshToken) : ICommand;

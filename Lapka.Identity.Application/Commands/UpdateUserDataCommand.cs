@@ -2,4 +2,4 @@
 
 namespace Lapka.Identity.Application.Commands;
 
-public record UpdateUserDataCommand(string Username, string FirstName, string LastName) : ICommand;
+public record UpdateUserDataCommand(Guid Id, string Username, string FirstName, string LastName) : ICommand;
