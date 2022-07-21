@@ -1,7 +1,6 @@
 ﻿using Convey.CQRS.Queries;
 using Lapka.Identity.Application.Exceptions.UserExceptions;
 using Lapka.Identity.Application.Queries;
-using Lapka.Identity.Core.IRepository;
 using Lapka.Identity.Infrastructure.DataBase;
 using Microsoft.EntityFrameworkCore;
 
@@ -21,7 +20,10 @@ internal class GetUserDataQueryHandler : IQueryHandler<GetUserDataQuery, GetUser
         if(query.Id == Guid.Empty)
             throw new UserNotFoundException();
 
-        var user = await _context.Users.FirstOrDefaultAsync(x => x.Id == query.Id);
+        var user = await _context.Users
+            .Include(x => x.UserExtended)
+            .FirstOrDefaultAsync(x => x.Id == query.Id);
+
         if (user is null || user.UserExtended is null)
         {
             throw new UserNotFoundException();
