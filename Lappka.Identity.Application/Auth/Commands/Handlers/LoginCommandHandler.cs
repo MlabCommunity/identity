@@ -4,7 +4,7 @@ using Lappka.Identity.Application.Services;
 using Lappka.Identity.Core.Entities;
 using Lappka.Identity.Core.Repositories;
 
-namespace Lappka.Identity.Application.Auth.Queries.Handlers;
+namespace Lappka.Identity.Application.Auth.Commands.Handlers;
 
 public class LoginCommandHandler : ICommandHandler<LoginCommand>
 {

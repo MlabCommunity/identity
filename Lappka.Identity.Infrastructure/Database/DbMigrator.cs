@@ -1,9 +1,9 @@
-using Lappka.Identity.Infrastructure.Context;
+using Lappka.Identity.Infrastructure.Database.Context;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 
-namespace Lappka.Identity.Infrastructure;
+namespace Lappka.Identity.Infrastructure.Database;
 
 public class DbMigrator : IHostedService
 {

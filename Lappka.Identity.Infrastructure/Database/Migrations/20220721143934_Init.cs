@@ -4,7 +4,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 
 #nullable disable
 
-namespace Lappka.Identity.Infrastructure.Migrations
+namespace Lappka.Identity.Infrastructure.Database.Migrations
 {
     public partial class Init : Migration
     {
@@ -157,7 +157,7 @@ namespace Lappka.Identity.Infrastructure.Migrations
                 });
 
             migrationBuilder.CreateTable(
-                name: "UsersExtended",
+                name: "UserExtended",
                 columns: table => new
                 {
                     Id = table.Column<Guid>(type: "uuid", nullable: false),
@@ -166,9 +166,9 @@ namespace Lappka.Identity.Infrastructure.Migrations
                 },
                 constraints: table =>
                 {
-                    table.PrimaryKey("PK_UsersExtended", x => x.Id);
+                    table.PrimaryKey("PK_UserExtended", x => x.Id);
                     table.ForeignKey(
-                        name: "FK_UsersExtended_AspNetUsers_Id",
+                        name: "FK_UserExtended_AspNetUsers_Id",
                         column: x => x.Id,
                         principalTable: "AspNetUsers",
                         principalColumn: "Id",
@@ -231,7 +231,7 @@ namespace Lappka.Identity.Infrastructure.Migrations
                 name: "AspNetUserTokens");
 
             migrationBuilder.DropTable(
-                name: "UsersExtended");
+                name: "UserExtended");
 
             migrationBuilder.DropTable(
                 name: "AspNetRoles");

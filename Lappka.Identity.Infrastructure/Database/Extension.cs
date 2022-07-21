@@ -1,14 +1,14 @@
 using Lappka.Identity.Core.Entities;
 using Lappka.Identity.Core.Repositories;
-using Lappka.Identity.Infrastructure.Context;
-using Lappka.Identity.Infrastructure.Postgres.Options;
-using Lappka.Identity.Infrastructure.Postgres.Repositories;
+using Lappka.Identity.Infrastructure.Database.Context;
+using Lappka.Identity.Infrastructure.Database.Postgres.Options;
+using Lappka.Identity.Infrastructure.Database.Postgres.Repositories;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 
-namespace Lappka.Identity.Infrastructure.Postgres;
+namespace Lappka.Identity.Infrastructure.Database;
 
 public static class Extension
 {
@@ -26,7 +26,7 @@ public static class Extension
         services.AddIdentity<AppUser, IdentityRole<Guid>>().AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
-        services.AddScoped<IAppDbContext, AppDbContext>();
+        services.AddScoped<AppDbContext>();
 
         return services;
     }

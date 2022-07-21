@@ -2,7 +2,7 @@ using Lappka.Identity.Core.Entities;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Lappka.Identity.Infrastructure.Context.EntitiesConfig;
+namespace Lappka.Identity.Infrastructure.Database.Context.EntitiesConfig;
 
 public class UserExtendedConfiguration : IEntityTypeConfiguration<UserExtended>
 {

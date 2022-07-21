@@ -1,17 +1,17 @@
 using Lappka.Identity.Core.Entities;
-using Lappka.Identity.Infrastructure.Context.EntitiesConfig;
+using Lappka.Identity.Infrastructure.Database.Context.EntitiesConfig;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace Lappka.Identity.Infrastructure.Context;
+namespace Lappka.Identity.Infrastructure.Database.Context;
 
 public class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid,
     IdentityUserClaim<Guid>,
     IdentityUserRole<Guid>,
     IdentityUserLogin<Guid>,
     IdentityRoleClaim<Guid>,
-    AppToken>, IAppDbContext
+    AppToken>
 {
     public DbSet<AppToken> Tokens { get; set; }
     public DbSet<UserExtended> UsersExtended { get; set; }

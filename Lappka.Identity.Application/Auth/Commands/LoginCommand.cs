@@ -1,6 +1,6 @@
 using Convey.CQRS.Commands;
 
-namespace Lappka.Identity.Application.Auth.Queries;
+namespace Lappka.Identity.Application.Auth.Commands;
 
 public record LoginCommand : ICommand
 {

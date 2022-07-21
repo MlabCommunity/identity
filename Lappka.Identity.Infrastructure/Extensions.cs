@@ -1,6 +1,7 @@
+using Lappka.Identity.Infrastructure.Database;
 using Lappka.Identity.Infrastructure.Exceptions;
-using Lappka.Identity.Infrastructure.Postgres;
 using Microsoft.AspNetCore.Builder;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 

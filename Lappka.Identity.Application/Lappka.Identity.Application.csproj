@@ -20,9 +20,5 @@
         <PackageReference Include="Microsoft.AspNetCore.Authentication.JwtBearer" Version="1.1.2" />
         <PackageReference Include="System.Xml.XmlDocument" Version="4.3.0" />
     </ItemGroup>
-
-    <ItemGroup>
-      <Folder Include="Auth" />
-    </ItemGroup>
-
+    
 </Project>
