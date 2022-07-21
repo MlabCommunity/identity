@@ -9,5 +9,5 @@ public class JwtSettings
     public bool UseRsa { get; set; }
 
     public string RsaPrivateKeyPath { get; set; }
-    public string RsaPublicKeyPath { get; set; }   
+    public string RsaPublicKeyPath { get; set; }
 }

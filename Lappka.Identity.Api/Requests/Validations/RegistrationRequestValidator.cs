@@ -5,8 +5,6 @@ namespace Lappka.Identity.Api.Requests.Validations;
 
 public class RegistrationRequestValidator : AbstractValidator<RegistrationRequest>
 {
-
-
     public RegistrationRequestValidator()
     {
         RuleFor(x => x.Email)

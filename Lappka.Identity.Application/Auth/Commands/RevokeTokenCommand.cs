@@ -2,8 +2,8 @@ using Convey.CQRS.Commands;
 
 namespace Lappka.Identity.Application.Auth.Commands;
 
-public class RevokeTokenCommand : ICommand
+public record RevokeTokenCommand : ICommand
 {
-    public string UserId;
-    public string RefreshToken { get; set; }
+    public Guid UserId { get; init; }
+    public string RefreshToken { get; init; }
 }

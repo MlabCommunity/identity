@@ -9,7 +9,7 @@ public class UserExtendedConfiguration : IEntityTypeConfiguration<UserExtended>
     public void Configure(EntityTypeBuilder<UserExtended> user)
     {
         user.HasKey(x => x.Id);
-        
+
         user.HasOne(x => x.User)
             .WithOne(y => y.UserExtended)
             .HasForeignKey<UserExtended>(k => k.Id)

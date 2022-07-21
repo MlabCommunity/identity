@@ -1,7 +1,7 @@
 using System.Security.Claims;
 using Convey.CQRS.Queries;
 using Lappka.Identity.Application.Dto;
-using Lappka.Identity.Application.Exceptions.Res;
+using Lappka.Identity.Application.Exceptions;
 using Lappka.Identity.Application.Services;
 using Lappka.Identity.Core.Repositories;
 
@@ -9,32 +9,32 @@ namespace Lappka.Identity.Application.Auth.Queries.Handlers;
 
 public class UseTokenQueryHandler : IQueryHandler<UseTokenQuery, TokensDto>
 {
-    private readonly AppUserManager _userManager;
+    private readonly IUserRepository _userRepository;
     private readonly IJwtHandler _jwtHandler;
     private readonly ITokenRepository _tokenRepository;
-    
-    public UseTokenQueryHandler(AppUserManager userManager, ITokenRepository tokenRepository,
-        IJwtHandler jwtHandler)
+
+    public UseTokenQueryHandler(IUserRepository userRepository, IJwtHandler jwtHandler,
+        ITokenRepository tokenRepository)
     {
-        _tokenRepository = tokenRepository;
-        _userManager = userManager;
+        _userRepository = userRepository;
         _jwtHandler = jwtHandler;
+        _tokenRepository = tokenRepository;
     }
 
     public async Task<TokensDto> HandleAsync(UseTokenQuery query,
         CancellationToken cancellationToken = new CancellationToken())
     {
-        var decodedToken =_jwtHandler.DecodeToken(query.AccessToken);
-        
-        var user = await _userManager.FindByIdAsync(decodedToken.Claims.FirstOrDefault(c=>c.Type==ClaimTypes.NameIdentifier).Value);
-        
+        var decodedToken = _jwtHandler.DecodeToken(query.AccessToken);
+
+        var user = await _userRepository.FindByIdAsync(Guid.Parse
+            (decodedToken.Claims.FirstOrDefault(c => c.Type == ClaimTypes.NameIdentifier).Value));
 
         if (user is null)
         {
             throw new UserNotFoundException();
         }
-        
-        var refreshToken = await _tokenRepository.GetRefreshTokenAsync(query.RefreshToken,user.Id);
+
+        var refreshToken = await _tokenRepository.FindRefreshTokenAsync(query.RefreshToken, user.Id);
 
         if (refreshToken is null)
         {
@@ -43,7 +43,7 @@ public class UseTokenQueryHandler : IQueryHandler<UseTokenQuery, TokensDto>
 
         if (!_jwtHandler.IsExpired(refreshToken.CreatedAt))
         {
-            await _tokenRepository.RemoveRefreshToken(refreshToken);
+            await _tokenRepository.RemoveRefreshTokenAsync(refreshToken);
             throw new RefreshTokenExpiredException();
         }
 
@@ -53,5 +53,4 @@ public class UseTokenQueryHandler : IQueryHandler<UseTokenQuery, TokensDto>
             RefreshToken = refreshToken.Value
         };
     }
-    
 }

@@ -1,4 +1,4 @@
-namespace Lappka.Identity.Application.Exceptions.Res;
+namespace Lappka.Identity.Application.Exceptions;
 
 public class UserNotFoundException : ProjectException
 {

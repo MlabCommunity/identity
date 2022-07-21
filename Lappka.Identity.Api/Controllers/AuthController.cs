@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Convey.CQRS.Commands;
 using Convey.CQRS.Queries;
 using Lappka.Identity.Api.Requests;
@@ -10,9 +9,7 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Lappka.Identity.Api.Controllers;
 
-[ApiController]
-[Route("api/identity/auth")]
-public class AuthController : ControllerBase
+public class AuthController : BaseController
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;
@@ -29,7 +26,7 @@ public class AuthController : ControllerBase
     [SwaggerResponse(400, "if credentials are invalid")]
     public async Task<IActionResult> RegisterAsync([FromBody] RegistrationRequest request)
     {
-        var command = new RegistrationCommand()
+        var command = new RegistrationCommand
         {
             Email = request.Email,
             Username = request.UserName,
@@ -49,10 +46,17 @@ public class AuthController : ControllerBase
     [SwaggerResponse(404, "If user was not found")]
     public async Task<IActionResult> LoginAsync(LoginRequest request)
     {
-        var query = new LoginQuery
+        var command = new LoginCommand
         {
             Email = request.Email,
             Password = request.Password
+        };
+
+        await _commandDispatcher.SendAsync(command);
+
+        var query = new GetTokensQuery
+        {
+            Email = request.Email,
         };
 
         var tokens = await _queryDispatcher.QueryAsync(query);
@@ -80,12 +84,11 @@ public class AuthController : ControllerBase
     [SwaggerResponse(200, "If token was revoked successfully")]
     [SwaggerResponse(404, "If user or token was not found")]
     [SwaggerResponse(401, "if user is not logged in or token expired")]
-    
     public async Task<IActionResult> RevokeTokenAsync([FromBody] RevokeTokenRequest request)
     {
         var command = new RevokeTokenCommand
         {
-            UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+            UserId = GetPrincipalId(),
             RefreshToken = request.RefreshToken
         };
 

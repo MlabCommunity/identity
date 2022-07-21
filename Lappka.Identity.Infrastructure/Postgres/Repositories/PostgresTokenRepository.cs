@@ -16,19 +16,19 @@ internal class PostgresTokenRepository : ITokenRepository
         _context = context;
     }
 
-    public async Task AddRefreshToken(AppToken appToken)
+    public async Task AddRefreshTokenAsync(AppToken appToken)
     {
         await _tokens.AddAsync(appToken);
         await _context.SaveChangesAsync();
     }
 
-    public async Task RemoveRefreshToken(AppToken appToken)
+    public async Task RemoveRefreshTokenAsync(AppToken appToken)
     {
         _tokens.Remove(appToken);
         await _context.SaveChangesAsync();
     }
 
-    public async Task<AppToken> GetRefreshTokenAsync(string token, string userId)
+    public async Task<AppToken> FindRefreshTokenAsync(string token, Guid userId)
     {
         return await _tokens.FirstOrDefaultAsync(x => x.UserId == userId && x.Value == token);
     }

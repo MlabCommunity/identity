@@ -11,7 +11,7 @@ public static class AuthExtension
         services.Configure<JwtSettings>(configuration.GetSection("jwt"));
         services.AddSingleton<IJwtHandler, JwtHandler>();
         services.AddAuthorization();
-        
+
         ServiceProvider serviceProvider = services.BuildServiceProvider();
         var jwtHandler = serviceProvider.GetService<IJwtHandler>();
 
@@ -25,6 +25,5 @@ public static class AuthExtension
                 opts => { opts.TokenValidationParameters = jwtHandler.Parameters; });
 
         return services;
-    }    
+    }
 }
-

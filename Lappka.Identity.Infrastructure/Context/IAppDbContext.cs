@@ -5,7 +5,7 @@ namespace Lappka.Identity.Infrastructure.Context;
 
 public interface IAppDbContext
 {
-     DbSet<UserExtended> UsersExtended { get; set; }
-     DbSet<AppToken> Tokens { get; set; }
-     Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
+    DbSet<AppToken> Tokens { get; set; }
+    DbSet<UserExtended> UsersExtended { get; set; }
+    Task<int> SaveChangesAsync(CancellationToken cancellationToken = default);
 }

@@ -1,10 +1,9 @@
 namespace Lappka.Identity.Api.Requests;
 
-public class ConfirmUpdateUserPasswordRequest
+public record ConfirmUpdateUserPasswordRequest
 {
-    public string Email { get; set; }
-    public string Password { get; set; }
-    public string ConfirmedPassword { get; set; }
-    public string ConfirmationToken { get; set; }
-    
+    public string Email { get; init; }
+    public string Password { get; init; }
+    public string ConfirmedPassword { get; init; }
+    public string ConfirmationToken { get; init; }
 }

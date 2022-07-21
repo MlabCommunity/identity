@@ -1,4 +1,3 @@
-using System.Security.Claims;
 using Convey.CQRS.Commands;
 using Convey.CQRS.Queries;
 using Lappka.Identity.Api.Requests;
@@ -11,10 +10,8 @@ using Swashbuckle.AspNetCore.Annotations;
 
 namespace Lappka.Identity.Api.Controllers;
 
-[ApiController]
-[Route("api/identity/users")]
 [Authorize]
-public class UserController : ControllerBase
+public class UserController : BaseController
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;
@@ -24,7 +21,7 @@ public class UserController : ControllerBase
         _commandDispatcher = commandDispatcher;
         _queryDispatcher = queryDispatcher;
     }
-    
+
     [HttpGet("{id}")]
     [SwaggerOperation(description: "Gets user by id")]
     [SwaggerResponse(200, "User found", typeof(UserDto))]
@@ -33,7 +30,7 @@ public class UserController : ControllerBase
     {
         var query = new GetUserByIdQuery()
         {
-            UserId = id
+            UserId = GetPrincipalId()
         };
         var user = await _queryDispatcher.QueryAsync(query);
         return Ok(user);
@@ -49,7 +46,7 @@ public class UserController : ControllerBase
     {
         var command = new UpdateUserCommand
         {
-            Id = User.FindFirstValue(ClaimTypes.NameIdentifier),
+            Id = GetPrincipalId(),
             FirstName = request.FirstName,
             LastName = request.LastName,
             PhoneNumber = request.PhoneNumber,
@@ -69,9 +66,10 @@ public class UserController : ControllerBase
     {
         var command = new UpdateUserEmailCommand
         {
-            UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+            UserId = GetPrincipalId(),
             Email = request.Email
         };
+
 
         await _commandDispatcher.SendAsync(command);
         return Ok();
@@ -85,7 +83,7 @@ public class UserController : ControllerBase
     {
         var command = new ConfirmUserPasswordCommand()
         {
-            UserId = User.FindFirstValue(ClaimTypes.NameIdentifier),
+            UserId = GetPrincipalId(),
             Email = request.Email,
             ConfirmationToken = request.ConfirmationToken,
             Password = request.Password,
@@ -104,7 +102,7 @@ public class UserController : ControllerBase
     {
         var query = new UpdateUserPasswordQuery
         {
-            UserId = User.FindFirstValue(ClaimTypes.NameIdentifier)
+            UserId = GetPrincipalId()
         };
         var confirmationToken = await _queryDispatcher.QueryAsync(query);
         return Ok(confirmationToken);

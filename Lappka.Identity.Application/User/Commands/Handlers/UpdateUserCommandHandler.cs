@@ -1,39 +1,33 @@
 using Convey.CQRS.Commands;
-using Lappka.Identity.Application.Exceptions.Res;
-using Lappka.Identity.Application.Services;
+using Lappka.Identity.Application.Exceptions;
+using Lappka.Identity.Core.Repositories;
 
 namespace Lappka.Identity.Application.User.Commands.Handlers;
 
 public class UpdateUserCommandHandler : ICommandHandler<UpdateUserCommand>
 {
-    
-    private readonly AppUserManager _userManager;
-    
-    public UpdateUserCommandHandler(AppUserManager userManager)
+    private readonly IUserRepository _userRepository;
+
+    public UpdateUserCommandHandler(IUserRepository userRepository)
     {
-        _userManager = userManager;
+        _userRepository = userRepository;
     }
-    
-    public async Task HandleAsync(UpdateUserCommand command, CancellationToken cancellationToken = new CancellationToken())
+
+    public async Task HandleAsync(UpdateUserCommand command,
+        CancellationToken cancellationToken = new CancellationToken())
     {
+        var user = await _userRepository.FindByIdAsync(command.Id);
 
-        if (command.Id is null)
-        {
-            throw new UserNotFoundException();
-        }
-
-        var user = await _userManager.FindByIdAsync(command.Id);
-        
         if (user is null)
         {
             throw new UserNotFoundException();
         }
-        
+
         user.UserName = command.UserName;
         user.PhoneNumber = command.PhoneNumber;
         user.UserExtended.FirstName = command.FirstName;
-        user.UserExtended.LastName= command.LastName;
+        user.UserExtended.LastName = command.LastName;
 
-        await _userManager.UpdateAsync(user);
+        await _userRepository.UpdateAsync(user);
     }
 }

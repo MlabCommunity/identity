@@ -1,37 +1,34 @@
 using Convey.CQRS.Commands;
-using Lappka.Identity.Application.Exceptions.Res;
-using Lappka.Identity.Application.Services;
+using Lappka.Identity.Application.Exceptions;
+using Lappka.Identity.Core.Repositories;
 
 namespace Lappka.Identity.Application.User.Commands.Handlers;
 
 public class ConfirmUserPasswordCommandHandler : ICommandHandler<ConfirmUserPasswordCommand>
 {
-    private readonly AppUserManager _appUserManager;
-    
-    public ConfirmUserPasswordCommandHandler(AppUserManager appUserManager)
+    private readonly IUserRepository _userRepository;
+
+    public ConfirmUserPasswordCommandHandler(IUserRepository userRepository)
     {
-        _appUserManager = appUserManager;
+        _userRepository = userRepository;
     }
+
 
     public async Task HandleAsync(ConfirmUserPasswordCommand command,
         CancellationToken cancellationToken = new CancellationToken())
     {
-        if (command.UserId is null)
-        {
-            throw new UserNotFoundException();
-        }
-
-        var user = await _appUserManager.FindByIdAsync(command.UserId);
+        var user = await _userRepository.FindByIdAsync(command.UserId);
 
         if (!command.Password.Equals(command.ConfirmationToken))
         {
             throw new DifferentPasswordException();
         }
-        
+
         if (user is null || !user.Email.Equals(command.Email))
         {
             throw new UserNotFoundException();
         }
-        await _appUserManager.ResetPasswordAsync(user, command.ConfirmationToken, command.ConfirmPassword);
+
+        await _userRepository.ResetPasswordAsync(user, command.ConfirmationToken, command.Password);
     }
 }

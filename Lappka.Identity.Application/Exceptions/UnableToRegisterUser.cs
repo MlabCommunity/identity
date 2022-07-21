@@ -1,7 +1,6 @@
-using System.Collections;
 using Microsoft.AspNetCore.Identity;
 
-namespace Lappka.Identity.Application.Exceptions.Res;
+namespace Lappka.Identity.Application.Exceptions;
 
 public class UnableToRegisterUser : ProjectException
 {

@@ -84,17 +84,18 @@ public class JwtHandler : IJwtHandler
         return true;
     }
 
-    public string CreateAccessToken(string userId)
+    public string CreateAccessToken(Guid userId)
     {
         var expires = DateTime.UtcNow.AddMinutes(_settings.ExpiryMinutes);
         var issuer = _settings.Issuer ?? string.Empty;
-        
+
         var claims = new List<Claim>()
         {
-            new Claim(ClaimTypes.NameIdentifier, userId),
+            new Claim(ClaimTypes.NameIdentifier, userId.ToString()),
         };
 
-        var jwtPayload = new JwtSecurityToken(issuer, issuer, claims, expires: expires, signingCredentials: _signingCredentials);
+        var jwtPayload = new JwtSecurityToken(issuer, issuer, claims, expires: expires,
+            signingCredentials: _signingCredentials);
         var token = _jwtSecurityTokenHandler.WriteToken(jwtPayload);
 
         return token;

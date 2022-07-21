@@ -8,6 +8,7 @@ namespace Lappka.Identity.Infrastructure;
 public class DbMigrator : IHostedService
 {
     private readonly IServiceScopeFactory _scopeFactory;
+
     public DbMigrator(IServiceScopeFactory scopeFactory)
     {
         _scopeFactory = scopeFactory;

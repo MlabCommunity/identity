@@ -1,7 +1,8 @@
 using System.Text.Json;
+using Lappka.Identity.Application.Exceptions;
 using Microsoft.AspNetCore.Http;
 
-namespace Lappka.Identity.Application.Exceptions;
+namespace Lappka.Identity.Infrastructure.Exceptions;
 
 internal sealed class ExceptionMiddleware : IMiddleware
 {
@@ -13,13 +14,12 @@ internal sealed class ExceptionMiddleware : IMiddleware
         }
         catch (ProjectException ex)
         {
-
             context.Response.StatusCode = ex._errorCode;
             context.Response.Headers.Add("content-type", "application/json");
-            
-            var json = JsonSerializer.Serialize(new {ErrorCode = ex._errorCode, ex.Message,Errors=ex.ExceptionData});
+
+            var json = JsonSerializer.Serialize(
+                new { ErrorCode = ex._errorCode, ex.Message, Errors = ex.ExceptionData });
             await context.Response.WriteAsync(json);
         }
     }
-    
 }

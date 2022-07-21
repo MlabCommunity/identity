@@ -5,5 +5,5 @@ namespace Lappka.Identity.Application.User.Queries;
 
 public record GetUserByIdQuery : IQuery<UserDto>
 {
-    public string UserId;
+    public Guid UserId;
 }

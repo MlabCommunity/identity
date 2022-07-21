@@ -1,6 +1,3 @@
-using Lappka.Identity.Application.Exceptions;
-using Lappka.Identity.Application.Services;
-using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -8,18 +5,6 @@ namespace Lappka.Identity.Application;
 
 public static class Extensions
 {
-    public static IServiceCollection AddMiddleware(this IServiceCollection services)
-    {
-        services.AddScoped<ExceptionMiddleware>();
-        return services;
-    }
-
-    public static IApplicationBuilder UseMiddleware(this IApplicationBuilder app)
-    {
-        app.UseMiddleware<ExceptionMiddleware>();
-        return app;
-    }
-    
     public static IServiceCollection AddCredentialsConfig(this IServiceCollection services)
     {
         services.Configure<IdentityOptions>(options =>
@@ -39,12 +24,9 @@ public static class Extensions
         });
         return services;
     }
-    
+
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
-        services.AddScoped<AppSignInManager>();
-        services.AddScoped<AppUserManager>();
         return services;
     }
-    
 }

@@ -6,16 +6,17 @@ using Microsoft.EntityFrameworkCore;
 
 namespace Lappka.Identity.Infrastructure.Context;
 
-public class AppDbContext : IdentityDbContext<AppUser, IdentityRole, string,
-    IdentityUserClaim<string>,
-    IdentityUserRole<string>,
-    IdentityUserLogin<string>,
-    IdentityRoleClaim<string>,
-    AppToken> , IAppDbContext
+public class AppDbContext : IdentityDbContext<AppUser, IdentityRole<Guid>, Guid,
+    IdentityUserClaim<Guid>,
+    IdentityUserRole<Guid>,
+    IdentityUserLogin<Guid>,
+    IdentityRoleClaim<Guid>,
+    AppToken>, IAppDbContext
 {
-    public DbSet<UserExtended> UsersExtended { get; set; }
     public DbSet<AppToken> Tokens { get; set; }
-    
+    public DbSet<UserExtended> UsersExtended { get; set; }
+
+
     public AppDbContext(DbContextOptions<AppDbContext> options) : base(options)
     {
     }
@@ -27,5 +28,4 @@ public class AppDbContext : IdentityDbContext<AppUser, IdentityRole, string,
 
         base.OnModelCreating(builder);
     }
-    
 }

@@ -15,19 +15,19 @@ public static class Extension
     public static IServiceCollection AddPostgres(this IServiceCollection services, IConfiguration configuration)
     {
         services.AddScoped<ITokenRepository, PostgresTokenRepository>();
-        
+        services.AddScoped<IUserRepository, PostgresUserRepository>();
+
         var options = configuration.GetOptions<PostgresOptions>("Postgres");
         services.AddDbContext<AppDbContext>(ctx =>
             ctx.UseNpgsql(options.ConnectionString));
 
         AppContext.SetSwitch("Npgsql.EnableLegacyTimestampBehavior", true);
 
-        services.AddIdentity<AppUser, IdentityRole>().AddEntityFrameworkStores<AppDbContext>()
+        services.AddIdentity<AppUser, IdentityRole<Guid>>().AddEntityFrameworkStores<AppDbContext>()
             .AddDefaultTokenProviders();
 
         services.AddScoped<IAppDbContext, AppDbContext>();
-        
-        
+
         return services;
     }
 }
