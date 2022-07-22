@@ -3,7 +3,7 @@ using Lappka.Identity.Application.Dto;
 
 namespace Lappka.Identity.Application.User.Queries;
 
-public record GetUserByIdQuery : IQuery<UserDto>
+public class GetUserByIdQuery : IQuery<UserDto>
 {
-    public Guid UserId;
+    public Guid UserId { get; set; }
 }

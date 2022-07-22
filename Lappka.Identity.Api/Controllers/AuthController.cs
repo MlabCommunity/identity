@@ -3,6 +3,8 @@ using Convey.CQRS.Queries;
 using Lappka.Identity.Api.Requests;
 using Lappka.Identity.Application.Auth.Commands;
 using Lappka.Identity.Application.Auth.Queries;
+using Lappka.Identity.Application.Dto;
+using Lappka.Identity.Infrastructure.Storage;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -13,11 +15,14 @@ public class AuthController : BaseController
 {
     private readonly ICommandDispatcher _commandDispatcher;
     private readonly IQueryDispatcher _queryDispatcher;
+    private readonly IUserRequestStorage _userRequestStorage;
 
-    public AuthController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher)
+    public AuthController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher,
+        IUserRequestStorage userRequestStorage)
     {
         _commandDispatcher = commandDispatcher;
         _queryDispatcher = queryDispatcher;
+        _userRequestStorage = userRequestStorage;
     }
 
     [HttpPost("register")]
@@ -54,12 +59,11 @@ public class AuthController : BaseController
 
         await _commandDispatcher.SendAsync(command);
 
-        var query = new GetTokensQuery
+        var tokens = new TokensDto
         {
-            Email = request.Email,
+            AccessToken = _userRequestStorage.GetToken(command.AccessTokenCacheId),
+            RefreshToken = _userRequestStorage.GetToken(command.RefreshTokenCacheId)
         };
-
-        var tokens = await _queryDispatcher.QueryAsync(query);
         return Ok(tokens);
     }
 
@@ -69,12 +73,20 @@ public class AuthController : BaseController
     [SwaggerResponse(404, "If user or token was not found")]
     public async Task<IActionResult> UseTokensAsync([FromBody] UseTokenRequest request)
     {
-        var query = new UseTokenQuery
+        var command = new UseTokenCommand
         {
             AccessToken = request.AccessToken,
             RefreshToken = request.RefreshToken
         };
-        var tokens = await _queryDispatcher.QueryAsync(query);
+
+        await _commandDispatcher.SendAsync(command);
+
+        var tokens = new TokensDto
+        {
+            AccessToken = _userRequestStorage.GetToken(command.AccessTokenCacheId),
+            RefreshToken = _userRequestStorage.GetToken(command.RefreshTokenCacheId)
+        };
+
         return Ok(tokens);
     }
 

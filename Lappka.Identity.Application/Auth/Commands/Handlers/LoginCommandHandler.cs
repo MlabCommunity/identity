@@ -3,6 +3,7 @@ using Lappka.Identity.Application.Exceptions;
 using Lappka.Identity.Application.Services;
 using Lappka.Identity.Core.Entities;
 using Lappka.Identity.Core.Repositories;
+using Lappka.Identity.Infrastructure.Storage;
 
 namespace Lappka.Identity.Application.Auth.Commands.Handlers;
 
@@ -11,6 +12,7 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand>
     private readonly IUserRepository _userRepository;
     private readonly ITokenRepository _tokenRepository;
     private readonly IJwtHandler _jwtHandler;
+    private readonly IUserRequestStorage _userRequestStorage;
 
     public LoginCommandHandler(IUserRepository userRepository, ITokenRepository tokenRepository, IJwtHandler jwtHandler)
     {
@@ -37,6 +39,7 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand>
         }
 
         var refreshToken = _jwtHandler.CreateRefreshToken();
+        var accessToken = _jwtHandler.CreateAccessToken(user.Id);
 
         var appToken = new AppToken()
         {
@@ -47,5 +50,7 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand>
         };
 
         await _tokenRepository.AddRefreshTokenAsync(appToken);
+        _userRequestStorage.SetToken(command.AccessTokenCacheId, accessToken);
+        _userRequestStorage.SetToken(command.RefreshTokenCacheId, refreshToken);
     }
 }
