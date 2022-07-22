@@ -67,6 +67,6 @@ internal class UseRefreshTokenCommandHandler : ICommandHandler<UseRefreshTokenCo
         }
 
         var accessToken = await _jwtGenerator.GenerateAccessToken(user);
-        _userRequestStorage.SetToken(command.TokenCasheId, accessToken);
+        _userRequestStorage.SetToken(command.TokenCacheId, accessToken);
     }
 }

@@ -2,21 +2,20 @@
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 
-namespace Lapka.Identity.Core.EntityConfiguration
+namespace Lapka.Identity.Core.EntityConfiguration;
+
+public class UserExtendedConfiguration : IEntityTypeConfiguration<UserExtended>
 {
-    public class UserExtendedConfiguration : IEntityTypeConfiguration<UserExtended>
+    public void Configure(EntityTypeBuilder<UserExtended> user)
     {
-        public void Configure(EntityTypeBuilder<UserExtended> user)
-        {
-            user.HasKey(x => x.Id);
+        user.HasKey(x => x.Id);
 
-            user.Property(x => x.IsDeleted)
-                .IsRequired();
+        user.Property(x => x.IsDeleted)
+            .IsRequired();
 
-            user.HasOne(x => x.User)
-                .WithOne(y => y.UserExtended)
-                .HasForeignKey<UserExtended>(k => k.Id)
-                .OnDelete(DeleteBehavior.Cascade);
-        }
+        user.HasOne(x => x.User)
+            .WithOne(y => y.UserExtended)
+            .HasForeignKey<UserExtended>(k => k.Id)
+            .OnDelete(DeleteBehavior.Cascade);
     }
 }

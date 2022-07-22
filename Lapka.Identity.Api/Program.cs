@@ -14,7 +14,7 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddControllers();
 builder.Services.AddScoped<IUserInfoProvider, UserInfoProvider>();
 
-builder.Services.AddIdentity<AppUser, IdentityRole<Guid>>(c =>
+builder.Services.AddIdentity<AppUser, AppRole>(c =>
     {
         c.SignIn.RequireConfirmedPhoneNumber = false;
         c.SignIn.RequireConfirmedEmail = false;

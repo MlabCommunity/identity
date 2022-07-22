@@ -4,7 +4,7 @@ namespace Lapka.Identity.Application.Commands;
 
 public record UseRefreshTokenCommand(string AccessToken, string RefreshToken) : ICommand
 {
-    public Guid TokenCasheId { get; init; } = Guid.NewGuid();
+    public Guid TokenCacheId { get; } = Guid.NewGuid();
 }
 
 public record UseRefreshTokenResult(string AccessToken);

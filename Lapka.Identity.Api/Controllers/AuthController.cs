@@ -50,8 +50,8 @@ public class AuthController : BaseController
         var command = new LoginCommand(request.Email, request.Password);
         await _commandDispatcher.SendAsync(command);
 
-        var tokens = new LoginResult(_userRequestStorage.GetToken(command.AccTokenCasheId),
-            _userRequestStorage.GetToken(command.RefTokenCasheId));
+        var tokens = new LoginResult(_userRequestStorage.GetToken(command.AccessTokenCacheId),
+            _userRequestStorage.GetToken(command.RefreshTokenCacheId));
         return Ok(tokens);
     }
 
@@ -65,7 +65,7 @@ public class AuthController : BaseController
         var command = new UseRefreshTokenCommand(request.AccessToken, request.RefreshToken);
         await _commandDispatcher.SendAsync(command);
 
-        var token = new UseRefreshTokenResult(_userRequestStorage.GetToken(command.TokenCasheId));
+        var token = new UseRefreshTokenResult(_userRequestStorage.GetToken(command.TokenCacheId));
         return Ok(token);
     }
 

@@ -43,8 +43,8 @@ internal class LoginCommandHandler : ICommandHandler<LoginCommand>
         var refreshToken = _jwtGenerator.GenerateRefreshToken();
 
         await _appTokenRepository.AddRefreshToken(user.Id, refreshToken);
-        _userRequestStorage.SetToken(command.AccTokenCasheId, accessToken);
-        _userRequestStorage.SetToken(command.RefTokenCasheId, refreshToken);
+        _userRequestStorage.SetToken(command.AccessTokenCacheId, accessToken);
+        _userRequestStorage.SetToken(command.RefreshTokenCacheId, refreshToken);
     }
 }
 
