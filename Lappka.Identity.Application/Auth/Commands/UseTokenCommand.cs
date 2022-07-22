@@ -1,8 +1,6 @@
 using Convey.CQRS.Commands;
-using Convey.CQRS.Queries;
-using Lappka.Identity.Application.Dto;
 
-namespace Lappka.Identity.Application.Auth.Queries;
+namespace Lappka.Identity.Application.Auth.Commands;
 
 public record UseTokenCommand : ICommand
 {

@@ -2,9 +2,8 @@ using Convey.CQRS.Commands;
 using Convey.CQRS.Queries;
 using Lappka.Identity.Api.Requests;
 using Lappka.Identity.Application.Auth.Commands;
-using Lappka.Identity.Application.Auth.Queries;
 using Lappka.Identity.Application.Dto;
-using Lappka.Identity.Infrastructure.Storage;
+using Lappka.Identity.Application.Services;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Swashbuckle.AspNetCore.Annotations;
@@ -14,14 +13,12 @@ namespace Lappka.Identity.Api.Controllers;
 public class AuthController : BaseController
 {
     private readonly ICommandDispatcher _commandDispatcher;
-    private readonly IQueryDispatcher _queryDispatcher;
     private readonly IUserRequestStorage _userRequestStorage;
 
-    public AuthController(ICommandDispatcher commandDispatcher, IQueryDispatcher queryDispatcher,
+    public AuthController(ICommandDispatcher commandDispatcher,
         IUserRequestStorage userRequestStorage)
     {
         _commandDispatcher = commandDispatcher;
-        _queryDispatcher = queryDispatcher;
         _userRequestStorage = userRequestStorage;
     }
 

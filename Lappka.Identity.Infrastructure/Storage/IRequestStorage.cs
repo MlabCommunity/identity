@@ -1,6 +1,7 @@
 namespace Lappka.Identity.Infrastructure.Storage;
 
-public class IRequestStorage
+internal interface IRequestStorage
 {
-    
+    void Set<T>(string key, T value, TimeSpan? duration = null);
+    T Get<T>(string key);
 }
