@@ -1,3 +1,4 @@
+using Lappka.Identity.Application.Services;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -27,6 +28,7 @@ public static class Extensions
 
     public static IServiceCollection AddApplication(this IServiceCollection services)
     {
+        services.AddScoped<INotificationGrpcService,NotificationGrpcService>();
         return services;
     }
 }

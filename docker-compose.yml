@@ -8,7 +8,7 @@ services:
       POSTGRES_PASSWORD: admin
       POSTGRES_USER: postgres
     ports:
-      - 5432:5432
+      - "5432:5432"
     volumes:
       - ./volumes/postgres:/var/lib/postgresql/14/data
     restart: unless-stopped
@@ -24,10 +24,12 @@ services:
       - "5050:80"  
 
   identity:
-    build: .
-    restart: always
+    build:
+      context: ../
+      dockerfile: Lappka.Identity.Api/Dockerfile
+    restart: unless-stopped
     ports:
-      - "5001:5001"
+      - "5001:80"
     depends_on:
       - postgres
     

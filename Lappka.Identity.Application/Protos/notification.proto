@@ -1,0 +1,15 @@
+syntax = "proto3";
+
+option csharp_namespace = "Lappka.Notification.Application";
+
+import "google/protobuf/empty.proto";
+
+package notification.protos;
+
+service NotificationService {
+    rpc RestartPassword(RestartPasswordRequest) returns (google.protobuf.Empty);
+}
+
+message RestartPasswordRequest{
+    string email= 1;
+}
