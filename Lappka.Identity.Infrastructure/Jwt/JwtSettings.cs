@@ -1,4 +1,4 @@
-namespace Lappka.Identity.Infrastructure.JWT;
+namespace Lappka.Identity.Infrastructure.Services;
 
 public class JwtSettings
 {

@@ -58,6 +58,22 @@ public class UserController : BaseController
     }
 
     [HttpPatch("email")]
+    [SwaggerOperation(description: "Generates new email confirmation token")]
+    [SwaggerResponse(200, "If user updated successfully")]
+    [SwaggerResponse(400, "If credentials are invalid")]
+    [SwaggerResponse(401, "If user is not logged in or token expired")]
+    public async Task<IActionResult> ResetUserEmail()
+    {
+        var query = new ResetUserEmailQuery
+        {
+            UserId = GetPrincipalId()
+        };
+
+        await _queryDispatcher.QueryAsync(query);
+        return Ok();
+    }
+    
+    [HttpPatch("email/confirm")]
     [SwaggerOperation(description: "Updates principal user email")]
     [SwaggerResponse(200, "If user updated successfully")]
     [SwaggerResponse(400, "If credentials are invalid")]
@@ -69,8 +85,7 @@ public class UserController : BaseController
             UserId = GetPrincipalId(),
             Email = request.Email
         };
-
-
+        
         await _commandDispatcher.SendAsync(command);
         return Ok();
     }

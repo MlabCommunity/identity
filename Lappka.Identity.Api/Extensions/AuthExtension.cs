@@ -1,5 +1,5 @@
 using Lappka.Identity.Application.Services;
-using Lappka.Identity.Infrastructure.JWT;
+using Lappka.Identity.Infrastructure.Jwt;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 
 namespace Lappka.Identity.Api.Extensions;
