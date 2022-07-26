@@ -17,4 +17,3 @@ internal class UserInfoProvider : IUserInfoProvider
     public string Name => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Name);
     public string Email => _httpContextAccessor.HttpContext?.User.FindFirstValue(ClaimTypes.Email);
 }
-
