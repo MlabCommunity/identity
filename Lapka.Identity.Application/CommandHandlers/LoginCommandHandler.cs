@@ -40,7 +40,7 @@ internal class LoginCommandHandler : ICommandHandler<LoginCommand>
         }
 
         var accessToken = await _jwtGenerator.GenerateAccessToken(user);
-        var refreshToken = _jwtGenerator.GenerateRefreshToken();
+        var refreshToken = _jwtGenerator.GenerateNoInfoToken();
 
         await _appTokenRepository.AddRefreshToken(user.Id, refreshToken);
         _userRequestStorage.SetToken(command.AccessTokenCacheId, accessToken);

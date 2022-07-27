@@ -6,6 +6,7 @@ using Lapka.Identity.Application;
 using Lapka.Identity.Core.Domain.Entities;
 using Lapka.Identity.Infrastructure;
 using Lapka.Identity.Infrastructure.DataBase;
+using Lapka.Identity.Infrastructure.gRPC;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 
@@ -26,6 +27,8 @@ builder.Services.AddIdentity<AppUser, AppRole>(c =>
 builder.Services.Configure<DataProtectionTokenProviderOptions>(opt =>
     opt.TokenLifespan = TimeSpan.FromHours(1));
 
+var GrpcOption = builder.Configuration.GetOptions<GrpcSettings>("gRPC");
+builder.Services.AddSingleton(GrpcOption);
 
 var connectionString = builder.Configuration.GetConnectionString("postgres");
 builder.Services.AddDbContext<DataContext>(x => x.UseNpgsql(connectionString));

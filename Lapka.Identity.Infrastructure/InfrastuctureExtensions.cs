@@ -2,6 +2,7 @@
 using Lapka.Identity.Core.IRepository;
 using Lapka.Identity.Infrastructure.DataBase;
 using Lapka.Identity.Infrastructure.Exceptions;
+using Lapka.Identity.Infrastructure.gRPC;
 using Lapka.Identity.Infrastructure.JWT;
 using Lapka.Identity.Infrastructure.Repository;
 using Microsoft.AspNetCore.Builder;
@@ -27,6 +28,8 @@ public static class InfrastuctureExtensions
         services.AddScoped<IJwtGenerator, JwtGenerator>(); // singleton?
         services.AddScoped<IAppTokenRepository, AppTokenRepository>();
         services.AddScoped<IAppUserRepository, AppUserRepository>();
+
+        services.AddScoped<INotificationGrpcService, NotificationGrpcService>();
 
         return services;
     }

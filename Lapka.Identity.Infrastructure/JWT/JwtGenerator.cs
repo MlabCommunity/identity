@@ -43,7 +43,7 @@ internal class JwtGenerator : IJwtGenerator
         return GenerateToken(descriptor);
     }
 
-    public string GenerateRefreshToken()
+    public string GenerateNoInfoToken()
     {
         var descriptor = new SecurityTokenDescriptor
         {

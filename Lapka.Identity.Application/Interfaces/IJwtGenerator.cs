@@ -5,5 +5,5 @@ namespace Lapka.Identity.Application.Interfaces;
 public interface IJwtGenerator
 {
     Task<string> GenerateAccessToken(AppUser user);
-    string GenerateRefreshToken();
+    string GenerateNoInfoToken();
 }
