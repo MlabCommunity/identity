@@ -1,6 +1,6 @@
 namespace Lappka.Identity.Application.Services;
 
-public interface INotificationGrpcService
+public interface INotificationGrpcClient
 {
     Task ResetPasswordAsync(string email,string token);
     Task ConfirmEmailAsync(string email,string token);

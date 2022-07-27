@@ -15,7 +15,7 @@ public static class Extensions
 {
     public static IServiceCollection AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
     {
-        services.AddScoped<INotificationGrpcService,NotificationGrpcService>();
+        services.AddScoped<INotificationGrpcClient,NotificationGrpcClient>();
         services.AddScoped<IUserRequestStorage, UserRequestStorage>();
         services.AddScoped<IRequestStorage, RequestStorage>();
         services.AddHostedService<DbMigrator>();

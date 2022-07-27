@@ -8,12 +8,12 @@ namespace Lappka.Identity.Application.User.Queries.Handlers;
 public class ChangeUserEmailQueryHandler : IQueryHandler<ChangeEmailQuery,string>
 {
     private readonly IUserRepository _userRepository;
-    private readonly INotificationGrpcService _notificationService;
+    private readonly INotificationGrpcClient _notificationClient;
 
-    public ChangeUserEmailQueryHandler(IUserRepository userRepository, INotificationGrpcService notificationService)
+    public ChangeUserEmailQueryHandler(IUserRepository userRepository, INotificationGrpcClient notificationClient)
     {
         _userRepository = userRepository;
-        _notificationService = notificationService;
+        _notificationClient = notificationClient;
     }
     
     
@@ -28,7 +28,7 @@ public class ChangeUserEmailQueryHandler : IQueryHandler<ChangeEmailQuery,string
         }
         
         var confirmationToken = await _userRepository.GenerateEmailResetTokenAsync(user);
-        await _notificationService.ChangeEmailAsync(user.Email, confirmationToken);
+        await _notificationClient.ChangeEmailAsync(user.Email, confirmationToken);
 
         return confirmationToken;
     }

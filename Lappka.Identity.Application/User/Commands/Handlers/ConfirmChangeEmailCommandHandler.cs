@@ -8,13 +8,13 @@ namespace Lappka.Identity.Application.User.Commands.Handlers;
 public class ConfirmChangeEmailCommandHandler : ICommandHandler<ConfirmChangeEmailCommand>
 {
     private readonly IUserRepository _userRepository;
-    private readonly INotificationGrpcService _notificationService;
+    private readonly INotificationGrpcClient _notificationClient;
 
     
-    public ConfirmChangeEmailCommandHandler(IUserRepository userRepository, INotificationGrpcService notificationService)
+    public ConfirmChangeEmailCommandHandler(IUserRepository userRepository, INotificationGrpcClient notificationClient)
     {
         _userRepository = userRepository;
-        _notificationService = notificationService;
+        _notificationClient = notificationClient;
     }
     
     public async Task HandleAsync(ConfirmChangeEmailCommand command,

@@ -10,13 +10,13 @@ namespace Lappka.Identity.Application.Auth.Commands.Handlers;
 public class RegistrationCommandHandler : ICommandHandler<RegistrationCommand>
 {
     private readonly IUserRepository _userRepository;
-    private readonly INotificationGrpcService _notificationService;
+    private readonly INotificationGrpcClient _notificationClient;
 
 
-    public RegistrationCommandHandler(IUserRepository userRepository, INotificationGrpcService notificationService)
+    public RegistrationCommandHandler(IUserRepository userRepository, INotificationGrpcClient notificationClient)
     {
         _userRepository = userRepository;
-        _notificationService = notificationService;
+        _notificationClient = notificationClient;
     }
 
     public async Task HandleAsync(RegistrationCommand command,
@@ -46,6 +46,6 @@ public class RegistrationCommandHandler : ICommandHandler<RegistrationCommand>
 
         var token = await _userRepository.GenerateEmailConfirmationTokenAsync(user);
 
-        await _notificationService.ConfirmEmailAsync(user.Email, token);
+        await _notificationClient.ConfirmEmailAsync(user.Email, token);
     }
 }

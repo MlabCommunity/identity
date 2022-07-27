@@ -15,7 +15,7 @@ public static class Extensions
     
     public static IServiceCollection AddNotification(this IServiceCollection services, IConfiguration configuration)
     {
-        services.Configure<GrpcOptions>(configuration.GetSection("Grpc"));
+        services.Configure<GrpcOptions>(configuration.GetSection("Grpc")); //TODO: change to singleton
         return services;
     }
 }

@@ -8,12 +8,12 @@ namespace Lappka.Identity.Application.User.Queries.Handlers;
 public class ResetPasswordQueryHandler : IQueryHandler<ResetPasswordQuery, string>
 {
     private readonly IUserRepository _userRepository;
-    private readonly INotificationGrpcService _notificationService;
+    private readonly INotificationGrpcClient _notificationClient;
 
-    public ResetPasswordQueryHandler(IUserRepository userRepository, INotificationGrpcService notificationService)
+    public ResetPasswordQueryHandler(IUserRepository userRepository, INotificationGrpcClient notificationClient)
     {
         _userRepository = userRepository;
-        _notificationService = notificationService;
+        _notificationClient = notificationClient;
     }
 
     public async Task<string> HandleAsync(ResetPasswordQuery query,
@@ -27,7 +27,7 @@ public class ResetPasswordQueryHandler : IQueryHandler<ResetPasswordQuery, strin
         }
 
         var token = await _userRepository.GeneratePasswordResetTokenAsync(user);
-        await _notificationService.ResetPasswordAsync(user.Email, token);
+        await _notificationClient.ResetPasswordAsync(user.Email, token);
         return token;
     }
 }
