@@ -26,7 +26,7 @@ internal class PostgresTokenRepository : ITokenRepository
         await _context.SaveChangesAsync();
     }
 
-    public async Task<AppToken> FindRefreshTokenAsync(string token, Guid userId)
+    public async Task<AppToken> GetRefreshTokenAsync(string token, Guid userId)
     {
         return await _context.Tokens.FirstOrDefaultAsync(x => x.UserId == userId && x.Value == token);
     }

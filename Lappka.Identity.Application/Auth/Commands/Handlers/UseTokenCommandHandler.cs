@@ -9,21 +9,22 @@ namespace Lappka.Identity.Application.Auth.Commands.Handlers;
 
 public class UseTokenCommandHandler : ICommandHandler<UseTokenCommand>
 {
-
     private readonly IUserRepository _userRepository;
     private readonly ITokenRepository _tokenRepository;
     private readonly IJwtHandler _jwtHandler;
     private readonly IUserRequestStorage _userRequestStorage;
-    
-    public UseTokenCommandHandler(IUserRepository userRepository, ITokenRepository tokenRepository, IJwtHandler jwtHandler, IUserRequestStorage userRequestStorage)
+
+    public UseTokenCommandHandler(IUserRepository userRepository, ITokenRepository tokenRepository,
+        IJwtHandler jwtHandler, IUserRequestStorage userRequestStorage)
     {
         _userRepository = userRepository;
         _tokenRepository = tokenRepository;
         _jwtHandler = jwtHandler;
         _userRequestStorage = userRequestStorage;
     }
-    
-    public async Task HandleAsync(UseTokenCommand command, CancellationToken cancellationToken = new CancellationToken())
+
+    public async Task HandleAsync(UseTokenCommand command,
+        CancellationToken cancellationToken = new CancellationToken())
     {
         var decodedToken = _jwtHandler.DecodeToken(command.AccessToken);
 
@@ -35,7 +36,7 @@ public class UseTokenCommandHandler : ICommandHandler<UseTokenCommand>
             throw new UserNotFoundException();
         }
 
-        var refreshToken = await _tokenRepository.FindRefreshTokenAsync(command.RefreshToken, user.Id);
+        var refreshToken = await _tokenRepository.GetRefreshTokenAsync(command.RefreshToken, user.Id);
 
         if (refreshToken is null)
         {

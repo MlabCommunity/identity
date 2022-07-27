@@ -6,5 +6,5 @@ public interface ITokenRepository
 {
     Task AddRefreshTokenAsync(AppToken appToken);
     Task RemoveRefreshTokenAsync(AppToken appToken);
-    Task<AppToken> FindRefreshTokenAsync(string token, Guid userId);
+    Task<AppToken> GetRefreshTokenAsync(string token, Guid userId);
 }

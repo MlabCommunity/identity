@@ -1,5 +1,6 @@
 using Convey.CQRS.Commands;
 using Lappka.Identity.Application.Exceptions;
+using Lappka.Identity.Application.Services;
 using Lappka.Identity.Core.Entities;
 using Lappka.Identity.Core.Repositories;
 using static Lappka.Identity.Core.Consts.Role;
@@ -9,12 +10,14 @@ namespace Lappka.Identity.Application.Auth.Commands.Handlers;
 public class RegistrationCommandHandler : ICommandHandler<RegistrationCommand>
 {
     private readonly IUserRepository _userRepository;
+    private readonly INotificationGrpcService _notificationService;
 
-    public RegistrationCommandHandler(IUserRepository userRepository)
+
+    public RegistrationCommandHandler(IUserRepository userRepository, INotificationGrpcService notificationService)
     {
         _userRepository = userRepository;
+        _notificationService = notificationService;
     }
-
 
     public async Task HandleAsync(RegistrationCommand command,
         CancellationToken cancellationToken = new CancellationToken())
@@ -30,14 +33,19 @@ public class RegistrationCommandHandler : ICommandHandler<RegistrationCommand>
         {
             throw new UserAlreadyExistException();
         }
-        
+
         var user = new AppUser { UserName = command.Username, Email = command.Email };
         var userExtended = new UserExtended(command.FirstName, command.LastName);
         var result = await _userRepository.RegisterAsync(user, userExtended, command.Password, USER);
+
 
         if (!result.Succeeded)
         {
             throw new UnableToRegisterUser(result.Errors.ToArray());
         }
+
+        var token = await _userRepository.GenerateEmailConfirmationTokenAsync(user);
+
+        await _notificationService.ConfirmEmailAsync(user.Email, token);
     }
 }

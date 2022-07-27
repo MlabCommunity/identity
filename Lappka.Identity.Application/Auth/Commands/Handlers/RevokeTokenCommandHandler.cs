@@ -29,7 +29,7 @@ public class RevokeTokenCommandHandler : ICommandHandler<RevokeTokenCommand>
             throw new UserNotFoundException();
         }
 
-        var refreshToken = await _tokenRepository.FindRefreshTokenAsync(command.RefreshToken, user.Id);
+        var refreshToken = await _tokenRepository.GetRefreshTokenAsync(command.RefreshToken, user.Id);
 
         if (refreshToken is null)
         {

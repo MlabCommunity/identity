@@ -1,8 +1,8 @@
 using Lappka.Identity.Core.Entities;
 using Lappka.Identity.Core.Repositories;
 using Lappka.Identity.Infrastructure.Database.Context;
-using Lappka.Identity.Infrastructure.Database.Postgres.Options;
 using Lappka.Identity.Infrastructure.Database.Postgres.Repositories;
+using Lappka.Identity.Infrastructure.Options;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;

@@ -13,7 +13,8 @@ public class LoginCommandHandler : ICommandHandler<LoginCommand>
     private readonly IJwtHandler _jwtHandler;
     private readonly IUserRequestStorage _userRequestStorage;
 
-    public LoginCommandHandler(IUserRepository userRepository, ITokenRepository tokenRepository, IJwtHandler jwtHandler, IUserRequestStorage userRequestStorage)
+    public LoginCommandHandler(IUserRepository userRepository, ITokenRepository tokenRepository, IJwtHandler jwtHandler,
+        IUserRequestStorage userRequestStorage)
     {
         _userRepository = userRepository;
         _tokenRepository = tokenRepository;

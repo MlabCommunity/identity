@@ -6,7 +6,7 @@ using Lappka.Identity.Application.Services;
 using Microsoft.Extensions.Options;
 using Microsoft.IdentityModel.Tokens;
 
-namespace Lappka.Identity.Infrastructure.Services;
+namespace Lappka.Identity.Infrastructure.Jwt;
 
 public class JwtHandler : IJwtHandler
 {

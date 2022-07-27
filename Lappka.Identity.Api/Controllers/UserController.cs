@@ -64,15 +64,15 @@ public class UserController : BaseController
     [SwaggerResponse(401, "If user is not logged in or token expired")]
     public async Task<IActionResult> ResetUserEmail()
     {
-        var query = new ResetUserEmailQuery
+        var query = new ChangeEmailQuery
         {
             UserId = GetPrincipalId()
         };
 
-        await _queryDispatcher.QueryAsync(query);
-        return Ok();
+        var confirmationToken = await _queryDispatcher.QueryAsync(query);
+        return Ok(confirmationToken);
     }
-    
+
     [HttpPatch("email/confirm")]
     [SwaggerOperation(description: "Updates principal user email")]
     [SwaggerResponse(200, "If user updated successfully")]
@@ -80,12 +80,13 @@ public class UserController : BaseController
     [SwaggerResponse(401, "If user is not logged in or token expired")]
     public async Task<IActionResult> UpdateUserEmail(UpdateUserEmailRequest request)
     {
-        var command = new UpdateUserEmailCommand
+        var command = new ConfirmChangeEmailCommand
         {
             UserId = GetPrincipalId(),
-            Email = request.Email
+            Email = request.Email,
+            
         };
-        
+
         await _commandDispatcher.SendAsync(command);
         return Ok();
     }
@@ -96,7 +97,7 @@ public class UserController : BaseController
     [SwaggerResponse(401, "If user is not logged in or token expired")]
     public async Task<IActionResult> ConfirmUserPassword(ConfirmUpdateUserPasswordRequest request)
     {
-        var command = new ConfirmUserPasswordCommand()
+        var command = new ConfirmResetPasswordCommand()
         {
             UserId = GetPrincipalId(),
             Email = request.Email,
@@ -115,7 +116,7 @@ public class UserController : BaseController
     [SwaggerResponse(401, "If user is not logged in or token expired")]
     public async Task<IActionResult> UpdateUserPassword()
     {
-        var query = new UpdateUserPasswordQuery
+        var query = new ResetPasswordQuery
         {
             UserId = GetPrincipalId()
         };

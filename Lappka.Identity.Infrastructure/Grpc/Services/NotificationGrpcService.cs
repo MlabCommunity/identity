@@ -1,23 +1,27 @@
 using Grpc.Net.Client;
 using Lappka.Identity.Application.Services;
+using Lappka.Identity.Infrastructure.Options;
+using Microsoft.Extensions.Options;
+
+namespace Lappka.Identity.Infrastructure.Grpc.Services;
 
 
-namespace Lappka.Identity.Infrastructure.Services;
-
+//if it should be controller instead of service
 public class NotificationGrpcService : INotificationGrpcService
 {
-    private GrpcChannel _channel = GrpcChannel.ForAddress("http://localhost:5011");
-    private readonly NotificationService.NotificationServiceClient _client;
+    private GrpcChannel _channel;
+    private readonly NotificationController.NotificationControllerClient _client;
 
-
-    public NotificationGrpcService()
+    public NotificationGrpcService(IOptions<GrpcOptions> options)
     {
-        _client = new NotificationService.NotificationServiceClient(_channel);
+        _channel = GrpcChannel.ForAddress(options.Value
+            .NotificationAddress); //TODO: ask mentor for the right way to do this
+        _client = new NotificationController.NotificationControllerClient(_channel);
     }
 
     public async Task ResetPasswordAsync(string email, string token)
     {
-        await _client.RestartPasswordAsync(new ResetPasswordRequest
+        await _client.ResetPasswordAsync(new ResetPasswordRequest
         {
             Email = email,
             Token = token
@@ -33,9 +37,9 @@ public class NotificationGrpcService : INotificationGrpcService
         });
     }
 
-    public async Task ResetEmailAsync(string email, string token)
+    public async Task ChangeEmailAsync(string email, string token)
     {
-        await _client.ResetEmailAsync(new ResetEmailRequest
+        await _client.ChangeEmailAsync(new ChangeEmailRequest
         {
             Email = email,
             Token = token
