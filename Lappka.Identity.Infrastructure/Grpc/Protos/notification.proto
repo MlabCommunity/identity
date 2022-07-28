@@ -1,0 +1,28 @@
+syntax = "proto3";
+
+option csharp_namespace = "Lappka.Identity.Infrastructure";
+
+import "google/protobuf/empty.proto";
+
+package notification.protos;
+
+service NotificationController {
+    rpc ResetPassword(ResetPasswordRequest) returns (google.protobuf.Empty);
+    rpc ConfirmEmail(ConfirmEmailRequest) returns (google.protobuf.Empty);
+    rpc ChangeEmail(ChangeEmailRequest) returns (google.protobuf.Empty);
+}
+
+message ResetPasswordRequest{
+    string email = 1;
+    string token = 2;
+}
+
+message ConfirmEmailRequest{
+    string email = 1;
+    string token = 2;
+}
+
+message ChangeEmailRequest{
+    string email = 1;
+    string token = 2;
+}
