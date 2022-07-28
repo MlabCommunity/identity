@@ -1,4 +1,5 @@
 ﻿using System.IdentityModel.Tokens.Jwt;
+using System.Security.Claims;
 using Lapka.Identity.Application;
 using Lapka.Identity.Application.Interfaces;
 using Lapka.Identity.Core.Domain.Entities;
@@ -48,6 +49,20 @@ internal class JwtGenerator : IJwtGenerator
         var descriptor = new SecurityTokenDescriptor
         {
             Audience = Guid.NewGuid().ToString()
+        };
+
+        return GenerateToken(descriptor);
+    }
+
+    public string GenerateConfirmEmailToken(string email)
+    {
+        var descriptor = new SecurityTokenDescriptor
+        {
+            //Subject = new ClaimsIdentity(email)
+            Claims = new Dictionary<string, object>()
+            {
+                {"email", email}
+            }
         };
 
         return GenerateToken(descriptor);

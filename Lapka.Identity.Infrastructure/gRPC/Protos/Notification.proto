@@ -27,4 +27,8 @@ message ConfirmEmailRequest
 {
 	string email = 1;
 	string token = 2;
+	string username = 3;
+	string firstname = 4;
+	string lastname = 5;
+	string userid = 6;
 }

@@ -1,9 +1,11 @@
 ﻿using Convey.CQRS.Commands;
 using Lapka.Identity.Application.Commands;
+using Lapka.Identity.Application.Exceptions.NotificationExceptions;
 using Lapka.Identity.Application.Exceptions.UserExceptions;
 using Lapka.Identity.Application.Interfaces;
 using Lapka.Identity.Core.Domain.Entities;
 using Microsoft.AspNetCore.Identity;
+using Microsoft.ClearScript;
 
 namespace Lapka.Identity.Application.CommandHandlers;
 
@@ -27,6 +29,29 @@ public class ResetPasswordCommandHandler : ICommandHandler<ResetPasswordCommand>
         }
 
         var token = await _userManager.GeneratePasswordResetTokenAsync(user);
-        await _notificationGrpcService.MailResetPassword(command.Email, token);
+
+        try
+        {
+            await _notificationGrpcService.SendEmailToResetPassword(command.Email, token);
+        }
+        catch (Exception ex)
+        {
+            try
+            {
+                var message = ex.Message;
+                var beg = message.IndexOf(@"Detail=");
+
+                var len1 = "Detail=\\\"".Length;
+                var end = message.IndexOf('"', beg + len1);
+
+                var detail = message.Substring(beg + len1 - 1, end - (beg + len1 - 1));
+
+                throw new FailedToSendEmail(detail, ex);
+            }
+            catch
+            {
+                throw new FailedToSendEmail(ex.Message, ex);
+            }
+        }
     }
 }

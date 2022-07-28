@@ -1,8 +1,10 @@
-﻿namespace Lapka.Identity.Application.Interfaces;
+﻿using Lapka.Identity.Application.DTO;
+
+namespace Lapka.Identity.Application.Interfaces;
 
 public interface INotificationGrpcService
 {
-    Task MailResetPassword(string email, string token);
-    Task MailResetEmailAddress(string email, string token);
-    Task MailConfirmEmailAddress(string email, string token);
+    Task SendEmailToResetPassword(string email, string token);
+    Task SendEmailToResetEmailAddress(string email, string token);
+    Task SendEmailToConfirmEmailAddress(ConfirmEmailAddressDTO dto);
 }

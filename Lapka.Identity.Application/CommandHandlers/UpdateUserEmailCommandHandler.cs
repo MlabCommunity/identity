@@ -1,5 +1,6 @@
 ﻿using Convey.CQRS.Commands;
 using Lapka.Identity.Application.Commands;
+using Lapka.Identity.Application.Exceptions.NotificationExceptions;
 using Lapka.Identity.Application.Exceptions.UserExceptions;
 using Lapka.Identity.Application.Interfaces;
 using Lapka.Identity.Core.IRepository;
@@ -42,6 +43,15 @@ internal class UpdateUserEmailCommandHandler : ICommandHandler<UpdateUserEmailCo
         await _appUserRepository.UpdateUserData(user);
 
         var token = _jwtGenerator.GenerateNoInfoToken();
-        await _notificationGrpcService.MailResetEmailAddress(command.Email, token); //todo someday: change to noconfirmed and add endpoint to do that
+
+        try
+        {
+            await _notificationGrpcService.SendEmailToResetEmailAddress(command.Email, token); 
+            //todo someday: change to noconfirmed and add endpoint to do that//}
+        }
+        catch(Exception ex)
+        {
+            throw new FailedToSendEmail(ex.Message, ex);
+        }
     }
 }

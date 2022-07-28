@@ -6,4 +6,5 @@ public interface IJwtGenerator
 {
     Task<string> GenerateAccessToken(AppUser user);
     string GenerateNoInfoToken();
+    string GenerateConfirmEmailToken(string email);
 }

@@ -29,7 +29,7 @@ public static class InfrastuctureExtensions
         services.AddScoped<IAppTokenRepository, AppTokenRepository>();
         services.AddScoped<IAppUserRepository, AppUserRepository>();
 
-        services.AddScoped<INotificationGrpcService, NotificationGrpcService>();
+        services.AddScoped<INotificationGrpcService, NotificationGrpcClient>();
 
         return services;
     }

@@ -40,6 +40,20 @@ public class AuthController : BaseController
         return NoContent();
     }
 
+    [HttpPost("confirmEmail/{token}")]
+    [SwaggerOperation(description: "Potwierdzenie maila podanego przy rejestracji.")]
+    [SwaggerResponse(200)]
+    [SwaggerResponse(400)]
+    [SwaggerResponse(500)]
+    public async Task<IActionResult> ConfirmEmail([FromRoute] string token)
+    {
+        var command = new ConfirmEmailCommand(token);
+
+        await _commandDispatcher.SendAsync(command);
+        return NoContent();
+    }
+
+
     [HttpPost("login")]
     [SwaggerOperation(description: "Logowanie użytkownika - zwracanie tokenu.")]
     [SwaggerResponse(204, Type = typeof(LoginResult))]
