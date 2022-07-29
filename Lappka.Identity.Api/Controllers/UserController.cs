@@ -26,11 +26,11 @@ public class UserController : BaseController
     [SwaggerOperation(description: "Gets user by id")]
     [SwaggerResponse(200, "User found", typeof(UserDto))]
     [SwaggerResponse(404, "User not found")]
-    public async Task<IActionResult> GetUserById(string id)
+    public async Task<IActionResult> GetUserById([FromRoute] Guid id)
     {
         var query = new GetUserByIdQuery()
         {
-            UserId = GetPrincipalId()
+            UserId = id
         };
         var user = await _queryDispatcher.QueryAsync(query);
         return Ok(user);
@@ -49,7 +49,6 @@ public class UserController : BaseController
             Id = GetPrincipalId(),
             FirstName = request.FirstName,
             LastName = request.LastName,
-            PhoneNumber = request.PhoneNumber,
             UserName = request.UserName
         };
 
@@ -62,13 +61,12 @@ public class UserController : BaseController
     [SwaggerResponse(200, "If user updated successfully")]
     [SwaggerResponse(400, "If credentials are invalid")]
     [SwaggerResponse(401, "If user is not logged in or token expired")]
-    public async Task<IActionResult> ResetUserEmail()
+    public async Task<IActionResult> ChangeUserEmail()
     {
         var query = new ChangeEmailQuery
         {
             UserId = GetPrincipalId()
         };
-
         var confirmationToken = await _queryDispatcher.QueryAsync(query);
         return Ok(confirmationToken);
     }
@@ -78,12 +76,14 @@ public class UserController : BaseController
     [SwaggerResponse(200, "If user updated successfully")]
     [SwaggerResponse(400, "If credentials are invalid")]
     [SwaggerResponse(401, "If user is not logged in or token expired")]
-    public async Task<IActionResult> UpdateUserEmail(UpdateUserEmailRequest request)
+    public async Task<IActionResult> ConfirmChangeEmail(UpdateEmailRequest request)
     {
         var command = new ConfirmChangeEmailCommand
         {
             UserId = GetPrincipalId(),
             Email = request.Email,
+            ConfirmationToken = request.ConfirmationToken,
+            Password = request.Password
             
         };
 
@@ -92,14 +92,14 @@ public class UserController : BaseController
     }
 
     [HttpPatch("password/confirm")]
+    [AllowAnonymous]
     [SwaggerOperation(description: "Confirms token with user data to reset password")]
     [SwaggerResponse(200, "If token confirmed successfully")]
     [SwaggerResponse(401, "If user is not logged in or token expired")]
-    public async Task<IActionResult> ConfirmUserPassword(ConfirmUpdateUserPasswordRequest request)
+    public async Task<IActionResult> ConfirmPassword(ConfirmPasswordRequest request)
     {
         var command = new ConfirmResetPasswordCommand()
         {
-            UserId = GetPrincipalId(),
             Email = request.Email,
             ConfirmationToken = request.ConfirmationToken,
             Password = request.Password,
@@ -114,11 +114,11 @@ public class UserController : BaseController
     [SwaggerOperation(description: "Generates token to reset password")]
     [SwaggerResponse(200, "If token generated successfully", typeof(string))]
     [SwaggerResponse(401, "If user is not logged in or token expired")]
-    public async Task<IActionResult> UpdateUserPassword()
+    public async Task<IActionResult> ResetPassword([FromBody] ResetPasswordRequest request)
     {
         var query = new ResetPasswordQuery
         {
-            UserId = GetPrincipalId()
+            Email = request.Email
         };
         var confirmationToken = await _queryDispatcher.QueryAsync(query);
         return Ok(confirmationToken);

@@ -22,16 +22,17 @@ internal class PostgresUserRepository : IUserRepository
     }
 
     public async Task<AppUser> FindByIdAsync(Guid userId)
-        => await _context.Users.FirstOrDefaultAsync(u => u.Id == userId);
+        => await _context.Users.Include(x=>x.UserExtended).FirstOrDefaultAsync(u => u.Id == userId);
 
     public async Task UpdateAsync(AppUser user)
     {
         _context.Users.Update(user);
         await _context.SaveChangesAsync();
     }
-    
+
     public async Task<AppUser> FindByEmailAsync(string email)
-        => await _context.Users.FirstOrDefaultAsync(u => u.Email == email);
+        => await _context.Users.Include(x=>x.UserExtended).FirstOrDefaultAsync(u => u.Email == email);
+
 
     public async Task<IdentityResult> RegisterAsync(AppUser user, UserExtended userExtended, string password, Role role)
     {
@@ -63,7 +64,7 @@ internal class PostgresUserRepository : IUserRepository
 
     public async Task AddToRoleAsync(AppUser user, Role role)
         => await _userManager.AddToRoleAsync(user, role.ToString());
-    
+
     public async Task<bool> CheckPasswordAsync(AppUser user, string password)
         => await _userManager.CheckPasswordAsync(user, password);
 

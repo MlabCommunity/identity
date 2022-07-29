@@ -1,4 +1,6 @@
 using Convey.CQRS.Commands;
+using Convey.MessageBrokers;
+using Lappka.Identity.Application.Events;
 using Lappka.Identity.Application.Exceptions;
 using Lappka.Identity.Application.Services;
 using Lappka.Identity.Core.Repositories;
@@ -9,14 +11,16 @@ public class ConfirmChangeEmailCommandHandler : ICommandHandler<ConfirmChangeEma
 {
     private readonly IUserRepository _userRepository;
     private readonly INotificationGrpcClient _notificationClient;
-
+    private readonly IBusPublisher _busPublisher;
     
-    public ConfirmChangeEmailCommandHandler(IUserRepository userRepository, INotificationGrpcClient notificationClient)
+    public ConfirmChangeEmailCommandHandler(IUserRepository userRepository, INotificationGrpcClient notificationClient,
+        IBusPublisher busPublisher)
     {
         _userRepository = userRepository;
         _notificationClient = notificationClient;
+        _busPublisher = busPublisher;
     }
-    
+
     public async Task HandleAsync(ConfirmChangeEmailCommand command,
         CancellationToken cancellationToken = new CancellationToken())
     {
@@ -41,5 +45,10 @@ public class ConfirmChangeEmailCommandHandler : ICommandHandler<ConfirmChangeEma
         {
             throw new UnableToResetEmail(result.Errors.ToArray());
         }
+
+        var integrationEvent = new UserUpdatedEvent(user.Id, user.Email, user.UserName, user.UserExtended.FirstName,
+            user.UserExtended.FirstName);
+
+        await _busPublisher.PublishAsync(integrationEvent);
     }
 }

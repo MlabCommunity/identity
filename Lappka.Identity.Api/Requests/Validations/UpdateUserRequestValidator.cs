@@ -25,8 +25,6 @@ public class UpdateUserRequestValidator : AbstractValidator<UpdateUserRequest>
             .MaximumLength(20)
             .Matches(NameRegex);
 
-        RuleFor(x => x.PhoneNumber)
-            .NotEmpty()
-            .Matches(PhoneNumberRegex);
+
     }
 }

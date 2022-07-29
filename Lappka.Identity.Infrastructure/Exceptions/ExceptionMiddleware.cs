@@ -21,5 +21,14 @@ internal sealed class ExceptionMiddleware : IMiddleware
                 new { ErrorCode = ex.ErrorCode, ex.Message, Errors = ex.ExceptionData });
             await context.Response.WriteAsync(json);
         }
+        catch (ProjectGrpcException ex)
+        {
+            context.Response.StatusCode = (int)ex.Status.StatusCode;
+            context.Response.Headers.Add("content-type", "application/json");
+
+            var json = JsonSerializer.Serialize(
+                new { ErrorCode = (int)ex.Status.StatusCode, ex.Message });
+            await context.Response.WriteAsync(json);
+        }
     }
 }

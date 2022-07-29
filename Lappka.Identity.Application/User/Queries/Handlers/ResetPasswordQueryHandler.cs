@@ -19,7 +19,7 @@ public class ResetPasswordQueryHandler : IQueryHandler<ResetPasswordQuery, strin
     public async Task<string> HandleAsync(ResetPasswordQuery query,
         CancellationToken cancellationToken = new CancellationToken())
     {
-        var user = await _userRepository.FindByIdAsync(query.UserId);
+        var user = await _userRepository.FindByEmailAsync(query.Email);
 
         if (user is null)
         {

@@ -1,6 +1,8 @@
 using Convey;
 using Convey.CQRS.Commands;
+using Convey.CQRS.Events;
 using Convey.CQRS.Queries;
+using Convey.MessageBrokers.RabbitMQ;
 using FluentValidation.AspNetCore;
 using Lappka.Identity.Api.Extensions;
 using Lappka.Identity.Application;
@@ -28,6 +30,9 @@ builder.Services.AddConvey()
     .AddInMemoryCommandDispatcher()
     .AddQueryHandlers()
     .AddInMemoryQueryDispatcher()
+    .AddEventHandlers()
+    .AddInMemoryEventDispatcher()
+    .AddRabbitMq()
     .Build();
 
 builder.Services.AddAuth(configuration);

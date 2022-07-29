@@ -3,7 +3,7 @@ using static Lappka.Identity.Api.Requests.Validations.Consts.AppRegexs;
 
 namespace Lappka.Identity.Api.Requests.Validations;
 
-public class ConfirmUserPasswordRequestValidator : AbstractValidator<ConfirmUpdateUserPasswordRequest>
+public class ConfirmUserPasswordRequestValidator : AbstractValidator<ConfirmPasswordRequest>
 {
     public ConfirmUserPasswordRequestValidator()
     {

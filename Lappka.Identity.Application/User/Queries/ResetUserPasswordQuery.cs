@@ -4,5 +4,5 @@ namespace Lappka.Identity.Application.User.Queries;
 
 public class ResetPasswordQuery : IQuery<string>
 {
-    public Guid UserId { get; set; }
+    public string Email { get; set; }
 }

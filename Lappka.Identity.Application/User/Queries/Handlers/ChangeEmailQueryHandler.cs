@@ -5,12 +5,12 @@ using Lappka.Identity.Core.Repositories;
 
 namespace Lappka.Identity.Application.User.Queries.Handlers;
 
-public class ChangeUserEmailQueryHandler : IQueryHandler<ChangeEmailQuery,string>
+public class ChangeEmailQueryHandler : IQueryHandler<ChangeEmailQuery,string>
 {
     private readonly IUserRepository _userRepository;
     private readonly INotificationGrpcClient _notificationClient;
 
-    public ChangeUserEmailQueryHandler(IUserRepository userRepository, INotificationGrpcClient notificationClient)
+    public ChangeEmailQueryHandler(IUserRepository userRepository, INotificationGrpcClient notificationClient)
     {
         _userRepository = userRepository;
         _notificationClient = notificationClient;

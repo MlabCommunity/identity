@@ -1,6 +1,6 @@
 namespace Lappka.Identity.Api.Requests;
 
-public record ConfirmUpdateUserPasswordRequest
+public record ConfirmPasswordRequest
 {
     public string Email { get; init; }
     public string Password { get; init; }

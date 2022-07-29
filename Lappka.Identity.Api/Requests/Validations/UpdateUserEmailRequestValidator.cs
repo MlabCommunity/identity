@@ -2,7 +2,7 @@ using FluentValidation;
 
 namespace Lappka.Identity.Api.Requests.Validations;
 
-public class UpdateUserEmailRequestValidator : AbstractValidator<UpdateUserEmailRequest>
+public class UpdateUserEmailRequestValidator : AbstractValidator<UpdateEmailRequest>
 {
     public UpdateUserEmailRequestValidator()
     {
