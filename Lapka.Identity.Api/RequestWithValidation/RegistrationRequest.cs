@@ -5,7 +5,7 @@ namespace Lapka.Identity.Api.RequestWithValidation;
 
 public record RegistrationRequest(string Username, string FirstName, string LastName, string EmailAddress, string Password, string ConfirmPassword);
 
-internal class RegistrationRequestValidator : AbstractValidator<RegistrationRequest>
+public class RegistrationRequestValidator : AbstractValidator<RegistrationRequest>
 {
     public RegistrationRequestValidator()
     {

@@ -4,7 +4,7 @@ namespace Lapka.Identity.Api.RequestWithValidation;
 
 public record TokenRequest(string Token);
 
-internal class TokenRequestValidator : AbstractValidator<TokenRequest>
+public class TokenRequestValidator : AbstractValidator<TokenRequest>
 {
     public TokenRequestValidator()
     {

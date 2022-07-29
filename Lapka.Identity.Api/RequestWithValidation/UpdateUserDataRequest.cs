@@ -5,7 +5,7 @@ namespace Lapka.Identity.Api.RequestWithValidation;
 
 public record UpdateUserDataRequest(string Username, string FirstName, string LastName);
 
-internal class UpdateUserDataRequestValidator : AbstractValidator<UpdateUserDataRequest>
+public class UpdateUserDataRequestValidator : AbstractValidator<UpdateUserDataRequest>
 {
     public UpdateUserDataRequestValidator()
     {

@@ -5,7 +5,7 @@ namespace Lapka.Identity.Api.RequestWithValidation;
 
 public record UpdateUserPasswordRequest(string Password, string ConfirmPassword);
 
-internal class UpdateUserPasswordRequestValidator : AbstractValidator<UpdateUserPasswordRequest>
+public class UpdateUserPasswordRequestValidator : AbstractValidator<UpdateUserPasswordRequest>
 {
     public UpdateUserPasswordRequestValidator()
     {

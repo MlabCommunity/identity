@@ -5,7 +5,7 @@ namespace Lapka.Identity.Api.RequestWithValidation;
 
 public record SetNewPasswordRequest(string Password, string ConfirmPassword, string Email);
 
-internal class SetNewPasswordRequestValidator : AbstractValidator<SetNewPasswordRequest>
+public class SetNewPasswordRequestValidator : AbstractValidator<SetNewPasswordRequest>
 {
     public SetNewPasswordRequestValidator()
     {

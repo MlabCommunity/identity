@@ -4,7 +4,7 @@ namespace Lapka.Identity.Api.RequestWithValidation;
 
 public record UserEmailRequest(string Email);
 
-internal class UserEmailRequestValidator : AbstractValidator<UserEmailRequest>
+public class UserEmailRequestValidator : AbstractValidator<UserEmailRequest>
 {
     public UserEmailRequestValidator()
     {
